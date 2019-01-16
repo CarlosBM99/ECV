@@ -45,31 +45,27 @@ blockquote *:last-child {
   flex-direction: column; 
   background-image: url("https://www.todoiphone.net/wp-content/uploads/2014/03/WhatsApp-Wallpaper-39.jpg");
   overflow: auto;
-  white-space: nowrap; 
 }
 .message {
-  display: absolute; 
   border: 1px solid black; 
   margin: 20px;  
   padding:10px;
   max-width: 50%;
   width: auto;
-  height: auto;
+  margin-right:auto; 
   border-radius: 25px;
   background-color: white;
 }
 .me {
-  display: absolute; 
   border: 1px solid black; 
   margin: 20px;  
   padding:10px;
   max-width: 50%;
   width: auto;
-  height: auto;
   border-radius: 25px;
   background-color: rgb(141, 238, 165);
-  margin-left:auto; margin-right:20px;
-  border-radius: 25px;
+  margin-left:auto; 
+  margin-right:20px;
 }
 .inputme {
   height: 100%; 
