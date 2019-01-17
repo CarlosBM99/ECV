@@ -36,6 +36,15 @@ blockquote {
 blockquote *:last-child {
   margin-bottom: 0;
 }
+
+.Room {
+    border: 1px solid black;
+    height: 20%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+
+}
 .messages {
   border:1px solid black; 
   height: 80%; 
@@ -55,6 +64,24 @@ blockquote *:last-child {
   margin-right:auto; 
   border-radius: 25px;
   background-color: white;
+}
+.name {
+    background-color: white;
+    margin: 5px;
+    padding: 1x;
+    font-weight: bold;
+}
+.myname {
+    background-color: white;
+    margin: 5px;
+    padding: 1x;
+    font-weight: bold;
+    background-color: rgb(141, 238, 165); 
+    text-align: right;
+}
+.info {
+    text-align: right;
+    background-color: rgba(0, 0, 0, 0)
 }
 .me {
   border: 1px solid black; 
