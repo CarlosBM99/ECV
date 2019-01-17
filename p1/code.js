@@ -11,8 +11,12 @@ server.on_connect = function () {
 server.on_message = function (user_id, message) {
     console.log('User ' + user_id + ' said ' + message);
     recieveMessage(message)
-
 }
+server.on_room_info = function (info) {
+    //to know which users are inside
+    console.log(info)
+};
+server.getReport( function(report) { console.log(report) } );
 function recieveMessage(message) {
     var element = document.createElement('div');
     console.log(input.value)

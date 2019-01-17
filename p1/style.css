@@ -70,7 +70,9 @@ blockquote *:last-child {
 .inputme {
   height: 100%; 
   width: 100%;
+  padding-left: 5px;
   border-radius: 0px 0px 0px 25px;
+  font-size: 20px
 }
 .sendmessage {
   border:1px solid black; 
