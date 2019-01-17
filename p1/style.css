@@ -48,7 +48,7 @@ blockquote *:last-child {
 }
 .message {
   border: 1px solid black; 
-  margin: 20px;  
+  margin: 5px;  
   padding:10px;
   max-width: 50%;
   width: auto;
@@ -58,7 +58,7 @@ blockquote *:last-child {
 }
 .me {
   border: 1px solid black; 
-  margin: 20px;  
+  margin: 5px;  
   padding:10px;
   max-width: 50%;
   width: auto;
