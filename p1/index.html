@@ -11,35 +11,59 @@
 <body>
     <div class="container">
         <h1>Chat App</h1>
-        <div class="Room">
+        <div id="menu">
             <div>
-                Room 1
+                Rooms:
             </div>
+            <div id="contlistrooms" class="container">
+                <div id="listrooms" class="listrooms">
+                    <!-- <div style="display: flex">
+                        <div style="flex-direction: row">AAAAA:</div>
+                        <div style="padding-left: 10px">3</div>
+                    </div> -->
+                </div>
+            </div>
+            <button id="menucreateroom">Create room</button>
         </div>
-        <div style="height: 80vh;">
-            <div id="messages" class="messages">
-                <div class="message">
-                    <div class="name">
-                        User
-                    </div>
+        <div id="onroom" style="display: none">
+            <div class="Room" style="display: flex; flex-direction: row">
+                <button id="back">
+                    Back
+                </button>
+                <div id="nameroom" style="padding-left: 10px">
+                        Room 1
+                </div>
+                <div id="clients" style="padding-left: 10px">
+                        1
+                </div>
+            </div>
+            <div style="height: 80vh;">
+                <div id="messages" class="messages">
+                    <!-- <div class="message">
+                        <div class="name">
+                            User
+                        </div>
                         hello
+                    </div> -->
+                    <!-- <div class="me">
+                        <div class="myname">
+                            Yo
+                        </div>
+                        Heey
+                    </div> -->
                 </div>
-                <div class="me">
-                    <div class="myname">
-                        Yo
-                    </div>
-                    Heey
-                </div>
-            </div>
-            <div class="sendmessage">
-                <div style="width: 85%; justify-content: flex-start; height: 100%">
+                <div class="sendmessage">
                     <input class="inputme">
-                </div>
-                <div style="width: 15%">
-                    <button style="height: 100%; width: 100%; border-radius: 0px 0px 25px 0px;">Send</button>
+                    <button class="sendbut">Send</button>
                 </div>
             </div>
         </div>
+        <div id="createroom" style="display: none">
+            <input id="inputcreateroom">
+            <button id="buttoncreateroom">Create</button>
+        </div>
+
+
     </div>
     <script type="text/javascript" src="sillyclient.js"></script>
     <script type="text/javascript" src="code.js"></script>
