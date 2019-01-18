@@ -36,6 +36,9 @@ blockquote {
 blockquote *:last-child {
   margin-bottom: 0;
 }
+.login {
+  display: flex; justify-content: center; align-items: center; flex-direction: column
+}
 .listrooms {
   justify-content: center; align-items: center; flex-direction: column
 }

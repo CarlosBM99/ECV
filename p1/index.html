@@ -9,9 +9,26 @@
 </head>
 
 <body>
-    <div class="container">
+    <div id="general" class="container">
         <h1>Chat App</h1>
-        <div id="menu">
+        <div id="login" class="login">
+            <div>
+                Username: <input id="logUserName">
+            </div>
+            <div>
+                Room name: <input id="logRoomName">
+            </div>
+            <button id="logCreate">
+                Create
+            </button>
+        </div>
+        <div id="menu" style="display: none">
+            <div style='display: flex; flex-direction: row'>
+                Username: 
+                    <div id="username" style='padding-left: 5px'>
+                            Username
+                        </div>
+            </div>
             <div>
                 Rooms:
             </div>
@@ -23,7 +40,7 @@
                     </div> -->
                 </div>
             </div>
-            <button id="menucreateroom">Create room</button>
+            <!-- <button id="menucreateroom">Create room</button> -->
         </div>
         <div id="onroom" style="display: none">
             <div class="Room" style="display: flex; flex-direction: row">
@@ -31,10 +48,10 @@
                     Back
                 </button>
                 <div id="nameroom" style="padding-left: 10px">
-                        Room 1
+                    Room 1
                 </div>
                 <div id="clients" style="padding-left: 10px">
-                        1
+                    1
                 </div>
             </div>
             <div style="height: 80vh;">
@@ -58,10 +75,10 @@
                 </div>
             </div>
         </div>
-        <div id="createroom" style="display: none">
+        <!-- <div id="createroom" style="display: none">
             <input id="inputcreateroom">
             <button id="buttoncreateroom">Create</button>
-        </div>
+        </div> -->
 
 
     </div>

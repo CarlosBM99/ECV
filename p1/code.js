@@ -7,31 +7,46 @@ back.addEventListener('click', backFun)
 var menu = document.querySelector('#menu')
 var onroom = document.querySelector('#onroom')
 var menuCreateRoom = document.querySelector('#menucreateroom')
-menuCreateRoom.addEventListener('click', showCreateRoom)
-var createRoom = document.querySelector('#createroom')
-var buttonCreateRoom = document.querySelector('#buttoncreateroom')
-buttonCreateRoom.addEventListener('click', ButCreateRoom)
-var inputCreateRoom = document.querySelector('#inputcreateroom')
-
+//menuCreateRoom.addEventListener('click', showCreateRoom)
+//var createRoom = document.querySelector('#createroom')
+//var buttonCreateRoom = document.querySelector('#buttoncreateroom')
+//buttonCreateRoom.addEventListener('click', ButCreateRoom)
+//var inputCreateRoom = document.querySelector('#inputcreateroom')
 var server = new SillyClient();
-conncectToServer('')
-function conncectToServer(room){
-    console.log('ROOM name: ', room)
-    server.connect('localhost' + ":55000", room);
+//conncectToServer('')
+
+var logCreate = document.querySelector('#logCreate')
+logCreate.addEventListener('click', loginCreate)
+var logUserName = document.querySelector('#logUserName')
+var userName = document.querySelector('#username')
+var logRoomName = document.querySelector('#logRoomName')
+var login = document.querySelector('#login')
+function conncectToServer(roomName, userName) {
+    console.log('ROOM name: ', roomName)
+    server.connect('localhost' + ":55000", roomName);
+    server.user_name = userName
+}
+function loginCreate() {
+    if (logUserName.value !== '' && logRoomName.value !== '') {
+        conncectToServer(logRoomName.value, logUserName.value)
+        userName.innerHTML = logUserName.value
+        menu.style.display = 'inline'
+        login.style.display = 'none'
+
+    }
 }
 server.on_connect = function () {
     console.log('Connected to Server!')
     checkServer()
 };
 
-function ButCreateRoom(){
+function ButCreateRoom() {
     //console.log('AAA')
-    if(inputCreateRoom.value !== ''){
+    if (inputCreateRoom.value !== '') {
         //console.log('yea')
         conncectToServer(inputCreateRoom.value)
         createRoom.style.display = 'none'
         onroom.style.display = 'inline'
-
     }
 }
 function showCreateRoom() {
@@ -86,7 +101,7 @@ function checkServer() {
         //console.log('REPORT: ', report.rooms)
         var contlistrooms = document.querySelector('#contlistrooms')
         var checkListrooms = document.querySelector('#listrooms')
-        if(checkListrooms){
+        if (checkListrooms) {
             contlistrooms.removeChild(checkListrooms)
         }
         var listrooms = document.createElement('div')
@@ -112,6 +127,10 @@ function checkServer() {
             contlistrooms.appendChild(listrooms)
         }
     })
+}
+server.on_user_connected = function(){
+    checkServer()
+    console.log('yep')
 }
 
 function enterRoom(event) {
