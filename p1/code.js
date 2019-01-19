@@ -21,6 +21,9 @@ logCreate.addEventListener('click', loginCreate)
 var logUserName = document.querySelector('#logUserName')
 var userName = document.querySelector('#username')
 var logRoomName = document.querySelector('#logRoomName')
+logRoomName.addEventListener('keydown', function (e) {
+    onKey(e, 'login')
+})
 var login = document.querySelector('#login')
 var user_name = ''
 function conncectToServer(roomName, userName) {
@@ -87,9 +90,9 @@ server.on_connect = function () {
     elem.scrollTop = elem.scrollHeight;
 } */
 server.on_message = function (user_id, message) {
-    if(JSON.parse(message).type === 'allmessages'){
+    if (JSON.parse(message).type === 'allmessages') {
         console.log('we got it')
-        for(var i in JSON.parse(message).msg){
+        for (var i in JSON.parse(message).msg) {
             //console.log(JSON.parse(message).msg[i])
             recieveMessage(JSON.parse(message).msg[i])
         }
@@ -99,7 +102,7 @@ server.on_message = function (user_id, message) {
     }
 }
 checkRoomInfo()
-function checkRoomInfo(){
+function checkRoomInfo() {
     console.log('EEEEE')
     server.on_room_info = function (info) {
         //to know which users are inside
@@ -146,7 +149,7 @@ function checkServer() {
         }
     })
 }
-server.on_user_connected = function(user_id){
+server.on_user_connected = function (user_id) {
     checkServer()
     checkRoomInfo()
     console.log('yep')
@@ -157,7 +160,7 @@ server.on_user_connected = function(user_id){
     user_con2.innerHTML = 'New User!!'
     user_con.appendChild(user_con2)
     messages_container.appendChild(user_con)
-    var numberusers= document.querySelector('#numberusers')
+    var numberusers = document.querySelector('#numberusers')
     console.log('NUMBER: ', numberusers)
     var num = parseInt(numberusers.innerHTML) + 1
     console.log(num)
@@ -166,7 +169,7 @@ server.on_user_connected = function(user_id){
     let message = { type: "allmessages", msg: messages[server.room.name], user: server.user_name }
     server.sendMessage(message, user_id)
 }
-server.on_user_disconnected = function(){
+server.on_user_disconnected = function () {
     checkServer()
     checkRoomInfo()
     console.log('yep')
@@ -190,7 +193,7 @@ server.on_user_disconnected = function(){
     onroom.style.display = 'flex'
 } */
 function recieveMessage(message) {
-    console.log('MESSAGE: ',message)
+    //console.log('MESSAGE: ',message)
     var element = document.createElement('div');
     //console.log(input.value)
     var childElement = document.createElement('div')
@@ -222,26 +225,33 @@ function sendMessage() {
     messages_container.appendChild(element)
     let message = { type: "msg", msg: input.value, user: server.user_name }
     server.sendMessage(message)
-    console.log('rooooom name: ',)
+    //console.log('rooooom name: ',)
     let roomname = server.room.name
 
-    if(messages[roomname]){
+    if (messages[roomname]) {
         messages[roomname].push(JSON.stringify(message))
     } else {
         messages[roomname] = []
         messages[roomname].push(JSON.stringify(message))
     }
-    console.log(messages)
+    //console.log(messages)
     input.value = ''
     var elem = document.getElementById('messages');
     elem.scrollTop = elem.scrollHeight;
 }
-input.addEventListener('keydown', onKey)
+input.addEventListener('keydown', function (e) {
+    onKey(e, 'inputme')
+})
 
-function onKey(e) {
+function onKey(e, type) {
+    console.log(type)
     //Enter Key
     if (e.which == 13) {
-        console.log('e')
-        sendMessage()
+        if (type === 'inputme') {
+            sendMessage()
+        }
+        else if (type === 'login') {
+            loginCreate()
+        }
     }
 }
