@@ -5,12 +5,12 @@ var messages_container = document.querySelector("#messages")
 //back.addEventListener('click', backFun)
 sendButton.addEventListener('click', sendMessage)
 var menu = document.querySelector('#menu')
-var fixedUsername = document.querySelector('#fixedUsername') 
+var fixedUsername = document.querySelector('#fixedUsername')
 var inapp = document.querySelector('#inapp')
 var rooms = document.querySelector('#rooms')
 var onroom = document.querySelector('#onroom')
 rooms.addEventListener('click', showRooms)
-function showRooms(){
+function showRooms() {
     checkServer()
     menu.style.display = 'inline'
     onroom.style.display = 'none'
@@ -35,12 +35,18 @@ logRoomName.addEventListener('keydown', function (e) {
 var login = document.querySelector('#login')
 var user_name = ''
 function conncectToServer(roomName, userName) {
-    console.log('ROOM name: ', roomName, 'USER NAME: ', userName)
+    //console.log('ROOM name: ', roomName, 'USER NAME: ', userName)
     server.connect('localhost' + ":55000", roomName);
-    console.log(server.user_name)
+    //console.log(server.user_name)
 }
 server.on_ready = function () {
-    server.user_name = user_name
+    //server.user_name = user_name
+    //server.clients[server.user_id].name = user_name
+    /* setInterval(function(){
+        console.log(server.getReport( function (report){
+            console.log(report)
+        }))
+    }) */
 }
 function loginCreate() {
     if (logUserName.value !== '' && logRoomName.value !== '') {
@@ -99,13 +105,17 @@ server.on_connect = function () {
 } */
 server.on_message = function (user_id, message) {
     if (JSON.parse(message).type === 'allmessages') {
-        console.log('we got it')
+        // delete previous messages from another room
+        while (messages_container.firstChild) {
+            messages_container.removeChild(messages_container.firstChild);
+        }
+        //console.log('we got it')
         for (var i in JSON.parse(message).msg) {
             //console.log(JSON.parse(message).msg[i])
             recieveMessage(JSON.parse(message).msg[i])
         }
     } else {
-        console.log('User ' + user_id + ' said ' + message);
+        //console.log('User ' + user_id + ' said ' + message);
         recieveMessage(message)
     }
 }
@@ -145,9 +155,9 @@ function checkServer() {
             numberUsers.style.paddingLeft = '10px'
             //console.log(room)
             if (room !== '') {
-                console.log('yea->', room)
+                //console.log('yea->', room)
                 nameRoom.innerHTML = room
-                separator.innerHTML = ' -> ' 
+                separator.innerHTML = ' -> '
                 nameRoom.addEventListener('click', enterRoom)
                 numberUsers.innerHTML = report.rooms[room]
                 numberUsers.setAttribute('id', 'numberusers')
@@ -163,12 +173,13 @@ function checkServer() {
 server.on_user_connected = function (user_id) {
     checkServer()
     checkRoomInfo()
-    console.log('yep')
+    //console.log('yep')
     var user_con = document.createElement('div')
     user_con.className = 'contflex'
     var user_con2 = document.createElement('div')
     user_con2.className = 'userConnected'
-    user_con2.innerHTML = 'New User!!'
+    user_con2.innerHTML = 'New User: ' + server.clients[user_id].name + '!!'
+    //console.log(server.clients)
     user_con.appendChild(user_con2)
     messages_container.appendChild(user_con)
     var numberusers = document.querySelector('#clients')
@@ -180,15 +191,15 @@ server.on_user_connected = function (user_id) {
     let message = { type: "allmessages", msg: messages[server.room.name], user: server.user_name }
     server.sendMessage(message, user_id)
 }
-server.on_user_disconnected = function () {
+server.on_user_disconnected = function (user_id) {
     checkServer()
     checkRoomInfo()
-    console.log('yep')
+    //console.log('yep')
     var user_con = document.createElement('div')
     user_con.className = 'contflex'
     var user_con2 = document.createElement('div')
     user_con2.className = 'userDisconnected'
-    user_con2.innerHTML = 'User disconnected!!'
+    user_con2.innerHTML = 'User disconnected: ' + 'user_' + user_id +'!!'
     user_con.appendChild(user_con2)
     messages_container.appendChild(user_con)
     var numberusers = document.querySelector('#clients')
@@ -202,11 +213,14 @@ server.on_user_disconnected = function () {
 }
 
 function enterRoom(event) {
-    console.log('EVENT', event.target.innerHTML)
+    //console.log('EVENT', event.target.innerHTML)
     let name = event.target.innerHTML
     //console.log('EYYYYY', name)
     //var menu = document.querySelector('#menu')
-    conncectToServer(name)
+    //check actual room
+    if(!(name === server.room.name)){
+        conncectToServer(name)
+    }
     menu.style.display = 'none'
     //var onroom = document.querySelector('#onroom')
     onroom.style.display = 'inline'
@@ -263,7 +277,7 @@ input.addEventListener('keydown', function (e) {
 })
 
 function onKey(e, type) {
-    console.log(type)
+    //console.log(type)
     //Enter Key
     if (e.which == 13) {
         if (type === 'inputme') {
