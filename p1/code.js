@@ -56,48 +56,60 @@ server.on_connect = function () {
     console.log('Connected to Server!')
     checkServer()
 };
-/* function ButCreateRoom() {
-    //console.log('AAA')
-    if (inputCreateRoom.value !== '') {
-        //console.log('yea')
-        conncectToServer(inputCreateRoom.value)
-        createRoom.style.display = 'none'
-        onroom.style.display = 'flex'
-    }
-} */
-/* function showCreateRoom() {
-    menu.style.display = 'none'
-    createRoom.style.display = 'inline'
-} */
-/* function backFun() {
-    checkServer()
-    inapp.style.display = 'flex'
-    onroom.style.display = 'none'
-} */
 
-//server.on_user_connected = function (user_id) {
-//    console.log('User ' + user_id + ' has entered the room');
-//    var element = document.createElement('div');
-//    element.className = "info"
-//    messages_container.appendChild(element)
-//    server.sendMessage({ type: "msg", msg: 'User ' + user_id + ' has entered the room' })
-//    input.value = ''
-//    var elem = document.getElementById('messages');
-//    elem.scrollTop = elem.scrollHeight;
-//}
+$(document).ready(function(){
+            var clic=false;
+            var xCoord,yCoord="";
+            var canvas=document.getElementById("can");
+            var cntx=canvas.getContext("2d");
+            cntx.strokeStyle="red";
+            cntx.lineWidth=10;
+            cntx.lineCap="round";
+            cntx.fillStyle="#fff";
+            cntx.fillRect(0,0,canvas.width,canvas.height);
 
-/* server.on_user_disconnected = function (user_id) {
-    console.log('User ' + user_id + ' has left the room');
-    var element = document.createElement('div');
-    console.log(input.value)
-    element.innerHTML = "Good Bye from " + user_id
-    element.className = "message"
-    messages_container.appendChild(element)
-    server.sendMessage({ type: "msg", msg: "Good Bye!" })
-    input.value = ''
-    var elem = document.getElementById('messages');
-    elem.scrollTop = elem.scrollHeight;
-} */
+            $("#can").mousedown(function(canvas){
+                clic=true;
+                cntx.save();
+                xCoord=canvas.pageX-this.offsetLeft;
+                yCoord=canvas.pageY-this.offsetTop
+            });
+
+            $(document).mouseup(function(){
+                clic=false
+            });
+
+            $(document).click(function(){
+                clic=false
+            });
+
+            $("#can").mousemove(function(canvas){
+                if(clic==true){
+                    cntx.beginPath();
+                    cntx.moveTo(canvas.pageX-this.offsetLeft,canvas.pageY-this.offsetTop);
+                    cntx.lineTo(xCoord,yCoord);
+                    cntx.stroke();
+                    cntx.closePath();
+                    xCoord=canvas.pageX-this.offsetLeft;
+                    yCoord=canvas.pageY-this.offsetTop
+                }
+            });
+
+            $("#clr > div").click(function(){
+                cntx.strokeStyle=$(this).css("background-color");
+            });
+                        
+            $("#borrador").click(function(){
+                cntx.strokeStyle="#fff"
+            });
+     
+            $("#limpiar").click(function(){
+                cntx.fillStyle="#fff";
+                cntx.fillRect(0,0,canvas.width, canvas.height);
+                cntx.strokeStyle="red";
+                cntx.fillStyle="red"
+            })
+        })
 server.on_message = function (user_id, message) {
     if (JSON.parse(message).type === 'allmessages') {
         // delete previous messages from another room

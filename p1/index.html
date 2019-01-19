@@ -31,6 +31,37 @@
             </div>
             <button id="rooms">Rooms</button>
             <div id="onroom">
+                <div style="display: inline; flex-direction: column">
+                    <canvas id="can" width="500" height="300">
+                    </canvas>
+                    <div style="display: flex; flex-direction: row">
+                        <div id="clr">
+                            <div style="height: 30px; width: 30px;background-color:black;"></div>
+                            <div style="height: 30px; width: 30px;background-color:red;"></div>
+                            <div style="height: 30px; width: 30px;background-color:green;"></div>
+                            <div style="height: 30px; width: 30px;background-color:orange;"></div>
+                            <div style="height: 30px; width: 30px;background-color:#FFFF00;"></div>
+                            <div style="height: 30px; width: 30px;background-color:#F43059;"></div>
+                            <div style="height: 30px; width: 30px;background-color:#ff00ff;"></div>
+                            <div style="height: 30px; width: 30px;background-color:#9ecc3b;"></div>
+                            <div style="height: 30px; width: 30px;background-color:#fbd;"></div>
+                            <div style="height: 30px; width: 30px;background-color:#fff460;"></div>
+                            <div style="height: 30px; width: 30px;background-color:#F43059;"></div>
+                            <div style="height: 30px; width: 30px;background-color:#82B82C;"></div>
+                            <div style="height: 30px; width: 30px;background-color:#0099FF;"></div>
+                            <div style="height: 30px; width: 30px;background-color:#ff00ff;"></div>
+                            <div style="height: 30px; width: 30px;background-color:rgb(128,0,255);"></div>
+                            <div style="height: 30px; width: 30px;background-color:rgb(255,128,0);"></div>
+                            <div style="height: 30px; width: 30px;background-color:rgb(153,254,0);"></div>
+                            <div style="height: 30px; width: 30px;background-color:rgb(18,0,255);"></div>
+                            <div style="height: 30px; width: 30px;background-color:rgb(255,28,0);"></div>
+                            <div style="height: 30px; width: 30px;background-color:rgb(13,54,0);"></div>
+                        </div>
+                        <a id="borrador" href="#" style="background-image: url('eraser.png'); height: 30px; width: 30px; background-repeat: no-repeat;background-size: cover;"></a>
+                        <a id="limpiar" href="#" style="background-image: url('clean.png'); height: 30px; width: 30px; background-repeat: no-repeat;background-size: cover;"></a>
+                    </div>
+
+                </div>
                 <div class="room" style="display: flex; flex-direction: row">
                     <!-- <button id="back">
                         Back
@@ -70,6 +101,7 @@
         </div>
 
     </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="sillyclient.js"></script>
     <script type="text/javascript" src="code.js"></script>
 </body>
