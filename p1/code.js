@@ -103,12 +103,12 @@ server.on_message = function (user_id, message) {
 }
 checkRoomInfo()
 function checkRoomInfo() {
-    console.log('EEEEE')
+    //console.log('EEEEE')
     server.on_room_info = function (info) {
         //to know which users are inside
-        console.log('innnnn')
-        console.log('ROOOOM infoooo')
-        console.log(info)
+        //console.log('innnnn')
+        //console.log('ROOOOM infoooo')
+        //console.log(info)
         var nameroom = document.querySelector('#nameroom')
         nameroom.innerHTML = info.name
         var clients = document.querySelector('#clients')
@@ -137,9 +137,9 @@ function checkServer() {
             //console.log(room)
             if (room !== '') {
                 console.log('yea->', room)
-                nameRoom.innerHTML = room
+                nameRoom.innerHTML = room + ' -> ' 
                 //nameRoom.addEventListener('click', enterRoom)
-                numberUsers.innerHTML = '-> ' + report.rooms[room]
+                numberUsers.innerHTML = report.rooms[room]
                 numberUsers.setAttribute('id', 'numberusers')
                 div.appendChild(nameRoom)
                 div.appendChild(numberUsers)
@@ -160,10 +160,10 @@ server.on_user_connected = function (user_id) {
     user_con2.innerHTML = 'New User!!'
     user_con.appendChild(user_con2)
     messages_container.appendChild(user_con)
-    var numberusers = document.querySelector('#numberusers')
-    console.log('NUMBER: ', numberusers)
+    var numberusers = document.querySelector('#clients')
+    //console.log('NUMBER: ', numberusers)
     var num = parseInt(numberusers.innerHTML) + 1
-    console.log(num)
+    //console.log(num)
     numberusers.innerHTML = num
     // send the messages to the new user
     let message = { type: "allmessages", msg: messages[server.room.name], user: server.user_name }
@@ -180,6 +180,15 @@ server.on_user_disconnected = function () {
     user_con2.innerHTML = 'User disconnected!!'
     user_con.appendChild(user_con2)
     messages_container.appendChild(user_con)
+    var numberusers = document.querySelector('#clients')
+    //console.log('NUMBER: ', numberusers)
+    var num = parseInt(numberusers.innerHTML) - 1
+    //console.log(num)
+    numberusers.innerHTML = num
+    // send the messages to the new user
+    //let message = { type: "allmessages", msg: messages[server.room.name], user: server.user_name }
+    //server.sendMessage(message, user_id)
+
 }
 
 /* function enterRoom(event) {
