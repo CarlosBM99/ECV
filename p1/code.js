@@ -15,14 +15,9 @@ function showRooms() {
     menu.style.display = 'inline'
     onroom.style.display = 'none'
 }
-//var menuCreateRoom = document.querySelector('#menucreateroom')
-//menuCreateRoom.addEventListener('click', showCreateRoom)
-//var createRoom = document.querySelector('#createroom')
-//var buttonCreateRoom = document.querySelector('#buttoncreateroom')
-//buttonCreateRoom.addEventListener('click', ButCreateRoom)
-//var inputCreateRoom = document.querySelector('#inputcreateroom')
+
 var server = new SillyClient();
-//conncectToServer('')
+
 var messages = {}
 var logCreate = document.querySelector('#logCreate')
 logCreate.addEventListener('click', loginCreate)
@@ -40,8 +35,8 @@ function conncectToServer(roomName, userName) {
     //console.log(server.user_name)
 }
 server.on_ready = function () {
-    //server.user_name = user_name
-    //server.clients[server.user_id].name = user_name
+    server.user_name = user_name
+    server.clients[server.user_id].name = user_name
     /* setInterval(function(){
         console.log(server.getReport( function (report){
             console.log(report)
@@ -110,9 +105,13 @@ server.on_message = function (user_id, message) {
             messages_container.removeChild(messages_container.firstChild);
         }
         //console.log('we got it')
+        let roomname = server.room.name
+        messages[roomname] = JSON.stringify(message).msg
+        //console.log(JSON.stringify(message).msg)
         for (var i in JSON.parse(message).msg) {
             //console.log(JSON.parse(message).msg[i])
             recieveMessage(JSON.parse(message).msg[i])
+            //console.log(JSON.parse(message).msg[i])
         }
     } else {
         //console.log('User ' + user_id + ' said ' + message);
@@ -240,6 +239,13 @@ function recieveMessage(message) {
     messages_container.appendChild(element)
     var elem = document.getElementById('messages');
     elem.scrollTop = elem.scrollHeight
+    let roomname = server.room.name
+    if (messages[roomname]) {
+        messages[roomname].push(message)
+    } else {
+        messages[roomname] = []
+        messages[roomname].push(message)
+    }
 }
 
 function sendMessage() {
@@ -260,7 +266,6 @@ function sendMessage() {
     server.sendMessage(message)
     //console.log('rooooom name: ',)
     let roomname = server.room.name
-
     if (messages[roomname]) {
         messages[roomname].push(JSON.stringify(message))
     } else {
