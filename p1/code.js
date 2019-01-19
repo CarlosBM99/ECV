@@ -5,8 +5,16 @@ var messages_container = document.querySelector("#messages")
 //back.addEventListener('click', backFun)
 sendButton.addEventListener('click', sendMessage)
 var menu = document.querySelector('#menu')
+var fixedUsername = document.querySelector('#fixedUsername') 
 var inapp = document.querySelector('#inapp')
-//var onroom = document.querySelector('#onroom')
+var rooms = document.querySelector('#rooms')
+var onroom = document.querySelector('#onroom')
+rooms.addEventListener('click', showRooms)
+function showRooms(){
+    checkServer()
+    menu.style.display = 'inline'
+    onroom.style.display = 'none'
+}
 //var menuCreateRoom = document.querySelector('#menucreateroom')
 //menuCreateRoom.addEventListener('click', showCreateRoom)
 //var createRoom = document.querySelector('#createroom')
@@ -131,17 +139,20 @@ function checkServer() {
             var div = document.createElement('div')
             div.style.display = 'flex'
             var nameRoom = document.createElement('div')
+            var separator = document.createElement('div')
             nameRoom.style.flexDirection = 'row'
             var numberUsers = document.createElement('div')
             numberUsers.style.paddingLeft = '10px'
             //console.log(room)
             if (room !== '') {
                 console.log('yea->', room)
-                nameRoom.innerHTML = room + ' -> ' 
-                //nameRoom.addEventListener('click', enterRoom)
+                nameRoom.innerHTML = room
+                separator.innerHTML = ' -> ' 
+                nameRoom.addEventListener('click', enterRoom)
                 numberUsers.innerHTML = report.rooms[room]
                 numberUsers.setAttribute('id', 'numberusers')
                 div.appendChild(nameRoom)
+                div.appendChild(separator)
                 div.appendChild(numberUsers)
                 listrooms.appendChild(div)
             }
@@ -188,19 +199,18 @@ server.on_user_disconnected = function () {
     // send the messages to the new user
     //let message = { type: "allmessages", msg: messages[server.room.name], user: server.user_name }
     //server.sendMessage(message, user_id)
-
 }
 
-/* function enterRoom(event) {
-    console.log(event.target.innerHTML)
+function enterRoom(event) {
+    console.log('EVENT', event.target.innerHTML)
     let name = event.target.innerHTML
     //console.log('EYYYYY', name)
     //var menu = document.querySelector('#menu')
     conncectToServer(name)
     menu.style.display = 'none'
     //var onroom = document.querySelector('#onroom')
-    onroom.style.display = 'flex'
-} */
+    onroom.style.display = 'inline'
+}
 function recieveMessage(message) {
     //console.log('MESSAGE: ',message)
     var element = document.createElement('div');
