@@ -57,59 +57,63 @@ server.on_connect = function () {
     checkServer()
 };
 
-$(document).ready(function(){
-            var clic=false;
-            var xCoord,yCoord="";
-            var canvas=document.getElementById("can");
-            var cntx=canvas.getContext("2d");
-            cntx.strokeStyle="red";
-            cntx.lineWidth=10;
-            cntx.lineCap="round";
-            cntx.fillStyle="#fff";
-            cntx.fillRect(0,0,canvas.width,canvas.height);
+var canvas = document.querySelector('#drawCanvas');
+var ctx = canvas.getContext('2d');
+var color = document.querySelector(':checked').getAttribute('data-color');
+ctx.strokeStyle = color;
+ctx.lineWidth = '3';
+ctx.lineCap = ctx.lineJoin = 'round';
 
-            $("#can").mousedown(function(canvas){
-                clic=true;
-                cntx.save();
-                xCoord=canvas.pageX-this.offsetLeft;
-                yCoord=canvas.pageY-this.offsetTop
-            });
+document.getElementById('colorSwatch').addEventListener('click', function() {
+    color = document.querySelector(':checked').getAttribute('data-color');
+}, false);
 
-            $(document).mouseup(function(){
-                clic=false
-            });
+canvas.addEventListener('mousedown', startDraw, false);
+canvas.addEventListener('mousemove', draw, false);
+canvas.addEventListener('mouseup', endDraw, false);
+// create a flag
+var isActive = false;
 
-            $(document).click(function(){
-                clic=false
-            });
+// array to collect coordinates
+var plots = [];
+function drawOnCanvas(color,plots) {
+    ctx.strokeStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(plots[0].x, plots[0].y);
 
-            $("#can").mousemove(function(canvas){
-                if(clic==true){
-                    cntx.beginPath();
-                    cntx.moveTo(canvas.pageX-this.offsetLeft,canvas.pageY-this.offsetTop);
-                    cntx.lineTo(xCoord,yCoord);
-                    cntx.stroke();
-                    cntx.closePath();
-                    xCoord=canvas.pageX-this.offsetLeft;
-                    yCoord=canvas.pageY-this.offsetTop
-                }
-            });
+    for (var i = 1; i < plots.length; i++) {
+        ctx.lineTo(plots[i].x, plots[i].y);
+    }
+    ctx.stroke();
+}
+function startDraw(e) {
+    isActive = true;
+}
 
-            $("#clr > div").click(function(){
-                cntx.strokeStyle=$(this).css("background-color");
-            });
-                        
-            $("#borrador").click(function(){
-                cntx.strokeStyle="#fff"
-            });
-     
-            $("#limpiar").click(function(){
-                cntx.fillStyle="#fff";
-                cntx.fillRect(0,0,canvas.width, canvas.height);
-                cntx.strokeStyle="red";
-                cntx.fillStyle="red"
-            })
-        })
+function endDraw(e) {
+    isActive = false;
+    sendMessage('canvas', {color: color, plots: plots})
+    // empty the array
+    plots = [];
+}
+
+function draw(e) {
+    if (!isActive) return;
+
+    // cross-browser canvas coordinates
+    var x = e.offsetX || e.layerX - canvas.offsetLeft;
+    var y = e.offsetY || e.layerY - canvas.offsetTop;
+
+    plots.push({ x: x, y: y });
+
+    drawOnCanvas(color,plots);
+}
+function drawFromStream(message) {
+    if(!plots) return;        
+
+    ctx.beginPath();
+    drawOnCanvas(message.color, message.plots);
+}
 server.on_message = function (user_id, message) {
     if (JSON.parse(message).type === 'allmessages') {
         // delete previous messages from another room
@@ -210,7 +214,7 @@ server.on_user_disconnected = function (user_id) {
     user_con.className = 'contflex'
     var user_con2 = document.createElement('div')
     user_con2.className = 'userDisconnected'
-    user_con2.innerHTML = 'User disconnected: ' + 'user_' + user_id +'!!'
+    user_con2.innerHTML = 'User disconnected: ' + 'user_' + user_id + '!!'
     user_con.appendChild(user_con2)
     messages_container.appendChild(user_con)
     var numberusers = document.querySelector('#clients')
@@ -229,65 +233,78 @@ function enterRoom(event) {
     //console.log('EYYYYY', name)
     //var menu = document.querySelector('#menu')
     //check actual room
-    if(!(name === server.room.name)){
+    if (!(name === server.room.name)) {
         conncectToServer(name)
     }
     menu.style.display = 'none'
     //var onroom = document.querySelector('#onroom')
     onroom.style.display = 'inline'
 }
+
 function recieveMessage(message) {
-    //console.log('MESSAGE: ',message)
-    var element = document.createElement('div');
-    //console.log(input.value)
-    var childElement = document.createElement('div')
-    var childElement2 = document.createElement('div')
-    childElement.className = 'name'
-    childElement.innerHTML = JSON.parse(message).user
-    element.appendChild(childElement)
-    element.className = "message"
-    childElement2.innerHTML = JSON.parse(message).msg
-    element.appendChild(childElement2)
-    messages_container.appendChild(element)
-    var elem = document.getElementById('messages');
-    elem.scrollTop = elem.scrollHeight
-    let roomname = server.room.name
-    if (messages[roomname]) {
-        messages[roomname].push(message)
+    if (JSON.parse(message).type !== 'canvas') {
+        //console.log('MESSAGE: ',message)
+        var element = document.createElement('div');
+        //console.log(input.value)
+        var childElement = document.createElement('div')
+        var childElement2 = document.createElement('div')
+        childElement.className = 'name'
+        childElement.innerHTML = JSON.parse(message).user
+        element.appendChild(childElement)
+        element.className = "message"
+        childElement2.innerHTML = JSON.parse(message).msg
+        element.appendChild(childElement2)
+        messages_container.appendChild(element)
+        var elem = document.getElementById('messages');
+        elem.scrollTop = elem.scrollHeight
+        let roomname = server.room.name
+        if (messages[roomname]) {
+            messages[roomname].push(message)
+        } else {
+            messages[roomname] = []
+            messages[roomname].push(message)
+        }
     } else {
-        messages[roomname] = []
-        messages[roomname].push(message)
+        drawFromStream(JSON.parse(message).msg)
     }
+
 }
 
-function sendMessage() {
-    //console.log('e: ', server.user_name)
-    var element = document.createElement('div');
-    //console.log(input.value)
-    var childElement = document.createElement('div')
-    var childElement2 = document.createElement('div')
-    childElement.className = 'myname'
-    childElement.innerHTML = server.user_name
-    element.appendChild(childElement)
-    childElement2.innerHTML = input.value
-    element.className = "me"
-    element.appendChild(childElement2)
-    //element.insertBefore(childElement, eElement.firstChild);
-    messages_container.appendChild(element)
-    let message = { type: "msg", msg: input.value, user: server.user_name }
-    server.sendMessage(message)
-    //console.log('rooooom name: ',)
-    let roomname = server.room.name
-    if (messages[roomname]) {
-        messages[roomname].push(JSON.stringify(message))
-    } else {
-        messages[roomname] = []
-        messages[roomname].push(JSON.stringify(message))
+function sendMessage(type,mes) {
+    if (type !== 'canvas') {
+        //console.log('e: ', server.user_name)
+        var element = document.createElement('div');
+        //console.log(input.value)
+        var childElement = document.createElement('div')
+        var childElement2 = document.createElement('div')
+        childElement.className = 'myname'
+        childElement.innerHTML = server.user_name
+        element.appendChild(childElement)
+        childElement2.innerHTML = input.value
+        element.className = "me"
+        element.appendChild(childElement2)
+        //element.insertBefore(childElement, eElement.firstChild);
+        messages_container.appendChild(element)
+        let message = { type: "msg", msg: input.value, user: server.user_name }
+        server.sendMessage(message)
+        //console.log('rooooom name: ',)
+        let roomname = server.room.name
+        if (messages[roomname]) {
+            messages[roomname].push(JSON.stringify(message))
+        } else {
+            messages[roomname] = []
+            messages[roomname].push(JSON.stringify(message))
+        }
+        //console.log(messages)
+        input.value = ''
+        var elem = document.getElementById('messages');
+        elem.scrollTop = elem.scrollHeight;
     }
-    //console.log(messages)
-    input.value = ''
-    var elem = document.getElementById('messages');
-    elem.scrollTop = elem.scrollHeight;
+    else {
+        //console.log('CANVAAAAS')
+        let message = { type: type, msg: mes, user: server.user_name }
+        server.sendMessage(message)
+    }
 }
 input.addEventListener('keydown', function (e) {
     onKey(e, 'inputme')

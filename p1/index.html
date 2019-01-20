@@ -31,34 +31,30 @@
             </div>
             <button id="rooms">Rooms</button>
             <div id="onroom">
-                <div style="display: inline; flex-direction: column">
-                    <canvas id="can" width="500" height="300">
+                <div style="display: flex; flex-direction: row">
+                    <canvas id="drawCanvas" width='600px' height="300px">
                     </canvas>
-                    <div style="display: flex; flex-direction: row">
-                        <div id="clr">
-                            <div style="height: 30px; width: 30px;background-color:black;"></div>
-                            <div style="height: 30px; width: 30px;background-color:red;"></div>
-                            <div style="height: 30px; width: 30px;background-color:green;"></div>
-                            <div style="height: 30px; width: 30px;background-color:orange;"></div>
-                            <div style="height: 30px; width: 30px;background-color:#FFFF00;"></div>
-                            <div style="height: 30px; width: 30px;background-color:#F43059;"></div>
-                            <div style="height: 30px; width: 30px;background-color:#ff00ff;"></div>
-                            <div style="height: 30px; width: 30px;background-color:#9ecc3b;"></div>
-                            <div style="height: 30px; width: 30px;background-color:#fbd;"></div>
-                            <div style="height: 30px; width: 30px;background-color:#fff460;"></div>
-                            <div style="height: 30px; width: 30px;background-color:#F43059;"></div>
-                            <div style="height: 30px; width: 30px;background-color:#82B82C;"></div>
-                            <div style="height: 30px; width: 30px;background-color:#0099FF;"></div>
-                            <div style="height: 30px; width: 30px;background-color:#ff00ff;"></div>
-                            <div style="height: 30px; width: 30px;background-color:rgb(128,0,255);"></div>
-                            <div style="height: 30px; width: 30px;background-color:rgb(255,128,0);"></div>
-                            <div style="height: 30px; width: 30px;background-color:rgb(153,254,0);"></div>
-                            <div style="height: 30px; width: 30px;background-color:rgb(18,0,255);"></div>
-                            <div style="height: 30px; width: 30px;background-color:rgb(255,28,0);"></div>
-                            <div style="height: 30px; width: 30px;background-color:rgb(13,54,0);"></div>
-                        </div>
-                        <a id="borrador" href="#" style="background-image: url('eraser.png'); height: 30px; width: 30px; background-repeat: no-repeat;background-size: cover;"></a>
-                        <a id="limpiar" href="#" style="background-image: url('clean.png'); height: 30px; width: 30px; background-repeat: no-repeat;background-size: cover;"></a>
+                    <div style="display: flex; flex-direction: column; width: 20%">
+                        <section id="colorSwatch">
+                            <input type="radio" name="color" id="color01" data-color="gold" checked><label for="color01"></label>
+                            <input type="radio" name="color" id="color02" data-color="darkorange"> <label for="color02"></label>
+                            <input type="radio" name="color" id="color03" data-color="navy"> <label for="color03"></label>
+                            <input type="radio" name="color" id="color04" data-color="yellowgreen"> <label for="color04"></label>
+                            <input type="radio" name="color" id="color05" data-color="firebrick"> <label for="color05"></label>
+                            <input type="radio" name="color" id="color06" data-color="powderblue"> <label for="color06"></label>
+                        </section>
+                        <!-- <div id="clr">
+                            <section id="colorSwitch">
+                                <input type="radio" name="color" id="color01" data-color="gold" checked><label for="color01"></label>
+                                <input type="radio" name="color" id="color02" data-color="darkorange"> <label for="color02"></label>
+                                <input type="radio" name="color" id="color03" data-color="navy"> <label for="color03"></label>
+                                <input type="radio" name="color" id="color04" data-color="yellowgreen"> <label for="color04"></label>
+                                <input type="radio" name="color" id="color05" data-color="firebrick"> <label for="color05"></label>
+                                <input type="radio" name="color" id="color06" data-color="powderblue"> <label for="color06"></label>
+                            </section>
+                        </div> -->
+                        <!-- <a id="borrador" href="#" style="background-image: url('eraser.png'); height: 30px; width: 30px; background-repeat: no-repeat;background-size: cover;"></a>
+                        <a id="limpiar" href="#" style="background-image: url('clean.png'); height: 30px; width: 30px; background-repeat: no-repeat;background-size: cover;"></a> -->
                     </div>
 
                 </div>

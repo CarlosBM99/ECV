@@ -378,6 +378,39 @@ input[type='radio'] {
   display: flex;
   flex-direction: column;
 }
+#colorSwitch {
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+}
+label[for=color01] {background: gold;}
+label[for=color02] {background: darkorange;}
+label[for=color03] {background: navy;}
+label[for=color04] {background: yellowgreen;}
+label[for=color05] {background: firebrick;}
+label[for=color06] {background: powderblue;}
+input[type=radio] {
+	margin: 0;
+	display: none;
+	width: 0;
+}
+input[type=radio]:checked + label::after {
+	content: '\2712';
+	position: absolute;
+	left: 8px;
+}
+
+label {
+	display: inline-block; 
+	width: 48px; height: 48px; 
+	position: relative;
+	padding-right: 5px;
+	border-radius: 50%;
+	text-shadow: 1px 1px 2px #000;
+	color: #fff;
+	font-size: 32px;
+	line-height: 46px;
+}
 
 a {
   color: #55b6b7;
