@@ -64,7 +64,7 @@ ctx.strokeStyle = color;
 ctx.lineWidth = '3';
 ctx.lineCap = ctx.lineJoin = 'round';
 
-document.getElementById('colorSwatch').addEventListener('click', function() {
+document.getElementById('colorSwatch').addEventListener('click', function () {
     color = document.querySelector(':checked').getAttribute('data-color');
 }, false);
 
@@ -76,7 +76,12 @@ var isActive = false;
 
 // array to collect coordinates
 var plots = [];
-function drawOnCanvas(color,plots) {
+function drawOnCanvas(color, plots) {
+    if (color === 'white') {
+        ctx.lineWidth = '10';
+    } else {
+        ctx.lineWidth = '3';
+    }
     ctx.strokeStyle = color;
     ctx.beginPath();
     ctx.moveTo(plots[0].x, plots[0].y);
@@ -92,7 +97,7 @@ function startDraw(e) {
 
 function endDraw(e) {
     isActive = false;
-    sendMessage('canvas', {color: color, plots: plots})
+    sendMessage('canvas', { color: color, plots: plots })
     // empty the array
     plots = [];
 }
@@ -106,10 +111,10 @@ function draw(e) {
 
     plots.push({ x: x, y: y });
 
-    drawOnCanvas(color,plots);
+    drawOnCanvas(color, plots);
 }
 function drawFromStream(message) {
-    if(!plots) return;        
+    if (!plots) return;
 
     ctx.beginPath();
     drawOnCanvas(message.color, message.plots);
@@ -119,8 +124,8 @@ server.on_message = function (user_id, message) {
         // delete previous messages from another room
         while (messages_container.firstChild) {
             messages_container.removeChild(messages_container.firstChild);
-            ctx.fillStyle="#fff";
-            ctx.fillRect(0,0,canvas.width, canvas.height);
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
         //console.log('we got it')
         let roomname = server.room.name
@@ -272,7 +277,7 @@ function recieveMessage(message) {
 
 }
 
-function sendMessage(type,mes) {
+function sendMessage(type, mes) {
     if (type !== 'canvas') {
         //console.log('e: ', server.user_name)
         var element = document.createElement('div');

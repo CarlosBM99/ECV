@@ -389,6 +389,7 @@ label[for=color03] {background: navy;}
 label[for=color04] {background: yellowgreen;}
 label[for=color05] {background: firebrick;}
 label[for=color06] {background: powderblue;}
+label[for=color07] {background: white; border: 1px black solid}
 input[type=radio] {
 	margin: 0;
 	display: none;
