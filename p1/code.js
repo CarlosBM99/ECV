@@ -119,6 +119,8 @@ server.on_message = function (user_id, message) {
         // delete previous messages from another room
         while (messages_container.firstChild) {
             messages_container.removeChild(messages_container.firstChild);
+            ctx.fillStyle="#fff";
+            ctx.fillRect(0,0,canvas.width, canvas.height);
         }
         //console.log('we got it')
         let roomname = server.room.name
