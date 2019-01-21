@@ -22,19 +22,19 @@
                 Create
             </button>
         </div>
-        <div id='inapp' style='display: none; flex-direction: column'>
-            <div id='fixedUsername' style='display:flex; flex-direction: row'>
+        <div id="inapp" class="inapp">
+            <div id="fixedUsername" class="fixedUsername">
                 Username:
-                <div id="username" style='padding-left: 5px'>
+                <div id="username" class="username">
                     Username
                 </div>
             </div>
             <button id="rooms">Rooms</button>
-            <div id="onroom">
-                <div style="display: flex; flex-direction: row">
-                    <canvas id="drawCanvas" width='600px' height="300px">
+            <div id="onroom" >
+                <div class="onroom">
+                    <canvas id="drawCanvas" width="700px" height="300px">
                     </canvas>
-                    <div style="display: flex; flex-direction: column; width: 20%">
+                    <div class="canvas">
                         <section id="colorSwatch">
                             <input type="radio" name="color" id="color01" data-color="gold" checked><label for="color01"></label>
                             <input type="radio" name="color" id="color02" data-color="darkorange"> <label for="color02"></label>
@@ -42,42 +42,23 @@
                             <input type="radio" name="color" id="color04" data-color="yellowgreen"> <label for="color04"></label>
                             <input type="radio" name="color" id="color05" data-color="firebrick"> <label for="color05"></label>
                             <input type="radio" name="color" id="color06" data-color="powderblue"> <label for="color06"></label>
-                            <input type="radio" name="color" id="color07" data-color="white"> <label for="color07" style="background-image: url('eraser.png'); background-size: cover;"></label>
+                            <input type="radio" name="color" id="color07" data-color="white"> <label for="color07"
+                                class="eraser"></label>
                         </section>
-                        <!-- <div id="clr">
-                            <section id="colorSwitch">
-                                <input type="radio" name="color" id="color01" data-color="gold" checked><label for="color01"></label>
-                                <input type="radio" name="color" id="color02" data-color="darkorange"> <label for="color02"></label>
-                                <input type="radio" name="color" id="color03" data-color="navy"> <label for="color03"></label>
-                                <input type="radio" name="color" id="color04" data-color="yellowgreen"> <label for="color04"></label>
-                                <input type="radio" name="color" id="color05" data-color="firebrick"> <label for="color05"></label>
-                                <input type="radio" name="color" id="color06" data-color="powderblue"> <label for="color06"></label>
-                            </section>
-                        </div> -->
-                        <!-- <a id="borrador" href="#" style="background-image: url('eraser.png'); height: 30px; width: 30px; background-repeat: no-repeat;background-size: cover;"></a>
-                        <a id="limpiar" href="#" style="background-image: url('clean.png'); height: 30px; width: 30px; background-repeat: no-repeat;background-size: cover;"></a> -->
                     </div>
 
                 </div>
-                <div class="room" style="display: flex; flex-direction: row">
-                    <!-- <button id="back">
-                        Back
-                    </button> -->
-                    <div id="nameroom" style="padding-left: 10px">
+                <div class="room">
+                    <div id="nameroom" class="nameroom">
                         Room 1
                     </div>
-                    <div id="clients" style="padding-left: 10px">
+                    <div id="clients" class="clients">
                         1
                     </div>
                 </div>
 
-                <div style="height: 80vh;">
+                <div class="container_messages">
                     <div id="messages" class="messages">
-                        <!-- <div class='contflex'>
-                            <div class="userDisconnected">
-                                user disconnected
-                            </div>
-                        </div> -->
                     </div>
                     <div class="sendmessage">
                         <input id="inputme" class="inputme">
@@ -85,7 +66,7 @@
                     </div>
                 </div>
             </div>
-            <div id="menu" style="display: none">
+            <div id="menu" class="menu">
                 <div>
                     Rooms:
                 </div>
@@ -94,7 +75,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
     </div>

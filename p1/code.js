@@ -1,8 +1,6 @@
 var sendButton = document.querySelector("#sendbutton")
 var input = document.querySelector("#inputme")
 var messages_container = document.querySelector("#messages")
-//var back = document.querySelector("#back")
-//back.addEventListener('click', backFun)
 sendButton.addEventListener('click', sendMessage)
 var menu = document.querySelector('#menu')
 var fixedUsername = document.querySelector('#fixedUsername')
@@ -12,8 +10,8 @@ var onroom = document.querySelector('#onroom')
 rooms.addEventListener('click', showRooms)
 function showRooms() {
     checkServer()
-    menu.style.display = 'inline'
-    onroom.style.display = 'none'
+    menu.style.display = menu.style.display === 'inline' ? 'none' : 'inline'
+    onroom.style.display = onroom.style.display === 'none' ? 'inline' : 'none'
 }
 
 var server = new SillyClient();
@@ -30,18 +28,11 @@ logRoomName.addEventListener('keydown', function (e) {
 var login = document.querySelector('#login')
 var user_name = ''
 function conncectToServer(roomName, userName) {
-    //console.log('ROOM name: ', roomName, 'USER NAME: ', userName)
-    server.connect('localhost' + ":55000", roomName);
-    //console.log(server.user_name)
+    server.connect("ecv-etic.upf.edu:9000", roomName);
 }
 server.on_ready = function () {
     server.user_name = user_name
     server.clients[server.user_id].name = user_name
-    /* setInterval(function(){
-        console.log(server.getReport( function (report){
-            console.log(report)
-        }))
-    }) */
 }
 function loginCreate() {
     if (logUserName.value !== '' && logRoomName.value !== '') {
@@ -127,28 +118,19 @@ server.on_message = function (user_id, message) {
             ctx.fillStyle = "#fff";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
-        //console.log('we got it')
         let roomname = server.room.name
         messages[roomname] = JSON.stringify(message).msg
-        //console.log(JSON.stringify(message).msg)
         for (var i in JSON.parse(message).msg) {
-            //console.log(JSON.parse(message).msg[i])
             recieveMessage(JSON.parse(message).msg[i])
-            //console.log(JSON.parse(message).msg[i])
         }
     } else {
-        //console.log('User ' + user_id + ' said ' + message);
         recieveMessage(message)
     }
 }
 checkRoomInfo()
 function checkRoomInfo() {
-    //console.log('EEEEE')
     server.on_room_info = function (info) {
         //to know which users are inside
-        //console.log('innnnn')
-        //console.log('ROOOOM infoooo')
-        //console.log(info)
         var nameroom = document.querySelector('#nameroom')
         nameroom.innerHTML = info.name
         var clients = document.querySelector('#clients')
@@ -157,8 +139,6 @@ function checkRoomInfo() {
 }
 function checkServer() {
     server.getReport(function (report) {
-        //console.log('REPORT: ', report)
-        //console.log('REPORT: ', report.rooms)
         var contlistrooms = document.querySelector('#contlistrooms')
         var checkListrooms = document.querySelector('#listrooms')
         if (checkListrooms) {
@@ -175,9 +155,7 @@ function checkServer() {
             nameRoom.style.flexDirection = 'row'
             var numberUsers = document.createElement('div')
             numberUsers.style.paddingLeft = '10px'
-            //console.log(room)
             if (room !== '') {
-                //console.log('yea->', room)
                 nameRoom.innerHTML = room
                 separator.innerHTML = ' -> '
                 nameRoom.addEventListener('click', enterRoom)
@@ -195,28 +173,25 @@ function checkServer() {
 server.on_user_connected = function (user_id) {
     checkServer()
     checkRoomInfo()
-    //console.log('yep')
     var user_con = document.createElement('div')
     user_con.className = 'contflex'
     var user_con2 = document.createElement('div')
     user_con2.className = 'userConnected'
     user_con2.innerHTML = 'New User: ' + server.clients[user_id].name + '!!'
-    //console.log(server.clients)
     user_con.appendChild(user_con2)
     messages_container.appendChild(user_con)
     var numberusers = document.querySelector('#clients')
-    //console.log('NUMBER: ', numberusers)
     var num = parseInt(numberusers.innerHTML) + 1
-    //console.log(num)
     numberusers.innerHTML = num
     // send the messages to the new user
     let message = { type: "allmessages", msg: messages[server.room.name], user: server.user_name }
     server.sendMessage(message, user_id)
+    var elem = document.getElementById('messages');
+    elem.scrollTop = elem.scrollHeight
 }
 server.on_user_disconnected = function (user_id) {
     checkServer()
     checkRoomInfo()
-    //console.log('yep')
     var user_con = document.createElement('div')
     user_con.className = 'contflex'
     var user_con2 = document.createElement('div')
@@ -225,34 +200,26 @@ server.on_user_disconnected = function (user_id) {
     user_con.appendChild(user_con2)
     messages_container.appendChild(user_con)
     var numberusers = document.querySelector('#clients')
-    //console.log('NUMBER: ', numberusers)
     var num = parseInt(numberusers.innerHTML) - 1
-    //console.log(num)
     numberusers.innerHTML = num
     // send the messages to the new user
-    //let message = { type: "allmessages", msg: messages[server.room.name], user: server.user_name }
-    //server.sendMessage(message, user_id)
+    var elem = document.getElementById('messages');
+    elem.scrollTop = elem.scrollHeight
 }
 
 function enterRoom(event) {
-    //console.log('EVENT', event.target.innerHTML)
     let name = event.target.innerHTML
-    //console.log('EYYYYY', name)
-    //var menu = document.querySelector('#menu')
     //check actual room
     if (!(name === server.room.name)) {
         conncectToServer(name)
     }
     menu.style.display = 'none'
-    //var onroom = document.querySelector('#onroom')
     onroom.style.display = 'inline'
 }
 
 function recieveMessage(message) {
     if (JSON.parse(message).type !== 'canvas') {
-        //console.log('MESSAGE: ',message)
         var element = document.createElement('div');
-        //console.log(input.value)
         var childElement = document.createElement('div')
         var childElement2 = document.createElement('div')
         childElement.className = 'name'
@@ -279,9 +246,7 @@ function recieveMessage(message) {
 
 function sendMessage(type, mes) {
     if (type !== 'canvas') {
-        //console.log('e: ', server.user_name)
         var element = document.createElement('div');
-        //console.log(input.value)
         var childElement = document.createElement('div')
         var childElement2 = document.createElement('div')
         childElement.className = 'myname'
@@ -290,11 +255,9 @@ function sendMessage(type, mes) {
         childElement2.innerHTML = input.value
         element.className = "me"
         element.appendChild(childElement2)
-        //element.insertBefore(childElement, eElement.firstChild);
         messages_container.appendChild(element)
         let message = { type: "msg", msg: input.value, user: server.user_name }
         server.sendMessage(message)
-        //console.log('rooooom name: ',)
         let roomname = server.room.name
         if (messages[roomname]) {
             messages[roomname].push(JSON.stringify(message))
@@ -302,13 +265,11 @@ function sendMessage(type, mes) {
             messages[roomname] = []
             messages[roomname].push(JSON.stringify(message))
         }
-        //console.log(messages)
         input.value = ''
         var elem = document.getElementById('messages');
         elem.scrollTop = elem.scrollHeight;
     }
     else {
-        //console.log('CANVAAAAS')
         let message = { type: type, msg: mes, user: server.user_name }
         server.sendMessage(message)
     }
@@ -318,7 +279,6 @@ input.addEventListener('keydown', function (e) {
 })
 
 function onKey(e, type) {
-    //console.log(type)
     //Enter Key
     if (e.which == 13) {
         if (type === 'inputme') {
