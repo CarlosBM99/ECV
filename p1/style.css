@@ -1,8 +1,7 @@
-body {
+.container {
   background-image: url('https://i.imgur.com/R3cpQ9R.gif');
   background-size: cover;
   font-family: 'Raleway', sans-serif;
-  flex: 1;
 }
 h1 {
   text-align: center;
