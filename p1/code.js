@@ -1,4 +1,4 @@
-/* var sendButton = document.querySelector("#sendbutton")
+var sendButton = document.querySelector("#sendbutton")
 var input = document.querySelector("#inputme")
 var messages_container = document.querySelector("#messages")
 sendButton.addEventListener('click', sendMessage)
@@ -6,7 +6,7 @@ var menu = document.querySelector('#menu')
 var inapp = document.querySelector('#inapp')
 var rooms = document.querySelector('#rooms')
 var onroom = document.querySelector('#onroom')
-rooms.addEventListener('click', showRooms)
+
 function showRooms() {
     checkServer()
     menu.style.display = menu.style.display === 'inline' ? 'none' : 'inline'
@@ -63,10 +63,10 @@ document.getElementById('colorSwatch').addEventListener('click', function () {
 canvas.addEventListener('mousedown', startDraw, false);
 canvas.addEventListener('mousemove', draw, false);
 canvas.addEventListener('mouseup', endDraw, false);
-// create a flag
+//create a flag
 var isActive = false;
 
-// array to collect coordinates
+//array to collect coordinates
 var plots = [];
 function drawOnCanvas(color, plots) {
     if (color === 'white') {
@@ -90,14 +90,14 @@ function startDraw(e) {
 function endDraw(e) {
     isActive = false;
     sendMessage('canvas', { color: color, plots: plots })
-    // empty the array
+    //empty the array
     plots = [];
 }
 
 function draw(e) {
     if (!isActive) return;
 
-    // cross-browser canvas coordinates
+    //cross-browser canvas coordinates
     var x = e.offsetX || e.layerX - canvas.offsetLeft;
     var y = e.offsetY || e.layerY - canvas.offsetTop;
 
@@ -113,7 +113,7 @@ function drawFromStream(message) {
 }
 server.on_message = function (user_id, message) {
     if (JSON.parse(message).type === 'allmessages') {
-        // delete previous messages from another room
+        //delete previous messages from another room
         while (messages_container.firstChild) {
             messages_container.removeChild(messages_container.firstChild);
             ctx.fillStyle = "#fff";
@@ -184,7 +184,7 @@ server.on_user_connected = function (user_id) {
     var numberusers = document.querySelector('#clients')
     var num = parseInt(numberusers.innerHTML) + 1
     numberusers.innerHTML = num
-    // send the messages to the new user
+    //send the messages to the new user
     let message = { type: "allmessages", msg: messages[server.room.name], user: server.user_name }
     server.sendMessage(message, user_id)
     var elem = document.getElementById('messages');
@@ -289,4 +289,4 @@ function onKey(e, type) {
             loginCreate()
         }
     }
-} */
+} 

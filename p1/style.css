@@ -1,7 +1,7 @@
-.container {
-  background-image: url('https://i.imgur.com/R3cpQ9R.gif');
-  background-size: cover;
-  font-family: 'Raleway', sans-serif;
+body {
+    background-image: url('https://i.imgur.com/R3cpQ9R.gif');
+    background-size: cover;
+    font-family: 'Raleway', sans-serif;
 }
 h1 {
   text-align: center;
@@ -9,26 +9,237 @@ h1 {
   text-shadow: 0 -1px 0 #fff, 0 1px 0 #2e2e2e, 0 2px 0 #2c2c2c, 0 3px 0 #2a2a2a, 0 4px 0 #282828, 0 5px 0 #262626, 0 6px 0 #242424, 0 7px 0 #222, 0 8px 0 #202020, 0 9px 0 #1e1e1e, 0 10px 0 #1c1c1c, 0 11px 0 #1a1a1a, 0 12px 0 #181818, 0 13px 0 #161616, 0 14px 0 #141414, 0 15px 0 #121212, 0 22px 30px rgba(0,0,0,0.9);
   font-size: 70px;
 }
+.h2 {
+    text-align: left;
+    color: white;
+    text-shadow: 0 -1px 0 #fff, 0 1px 0 #2e2e2e, 0 2px 0 #2c2c2c, 0 3px 0 #2a2a2a, 0 4px 0 #282828, 0 5px 0 #262626, 0 6px 0 #242424, 0 7px 0 #222, 0 8px 0 #202020, 0 9px 0 #1e1e1e, 0 10px 0 #1c1c1c, 0 11px 0 #1a1a1a, 0 12px 0 #181818, 0 13px 0 #161616, 0 14px 0 #141414, 0 15px 0 #121212, 0 22px 30px rgba(0,0,0,0.9);
+    font-size: 50px;
+}
 .title {
   color: white;
   text-shadow: 0 -1px 0 #fff, 0 1px 0 #2e2e2e, 0 2px 0 #2c2c2c, 0 3px 0 #2a2a2a, 0 4px 0 #282828, 0 5px 0 #262626, 0 6px 0 #242424, 0 7px 0 #222, 0 8px 0 #202020, 0 9px 0 #1e1e1e, 0 10px 0 #1c1c1c, 0 11px 0 #1a1a1a, 0 12px 0 #181818, 0 13px 0 #161616, 0 14px 0 #141414, 0 15px 0 #121212, 0 22px 30px rgba(0,0,0,0.9);
   font-size: 40px;
 }
 .login {
-  display: flex;
-  padding-top: 70px;
-  color: white;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+    padding-top: 70px;
+    color: white;
+    flex-direction: column;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center
 }
-.inapp{
-  display: none;
+.inputUsername {
+    display: flex;
+    background-color: white;
+    border-radius: 20px;
+    width: 250px;
+    height: 40px;
+    margin-bottom: 20px
 }
-.fill-height-or-more > div {
-  flex: 1;
+.insideUsernameBubble {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 15px
+}
+.roomsZone {
+    position: absolute;
+    left: 10px;
+    top: 90px;
+    height: 750px;
+    width: 220px;
+    background-color: white;
+    border-radius: 20px 20px 0px 0px;
+}
+.userZone {
+    position: absolute;
+    top: 750px;
+    height: 50px;
+    width: 220px;
+    background-color: grey;    
+    border-radius: 0px 0px 20px 20px;
+}
+.avatar {
+    color: black;
+    font-size: 20px;
+    padding-right: 10px
+}
+.username {
+    position: absolute;
+    left: 40px;
+    top: 15px;
+}
+.inapp {
+    display: none;
+}
+.container {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    height: 600px;
+    width: 220px;
+}
+.listrooms {
+    position: absolute;
+    left: 10px;
+    top: 20px;
+    height: 600px;
+    width: 220px;
+}
+.container_messages {
+    position: absolute;
+    left: 300px;
+    top: 10px;
+    height: 750px;
+    width: 600px;
+    background-color: white;
+    border-radius: 20px;
+}
+.messages {
+    border: 1px solid black;
+    height: 800px;
+    width: 600px;
+    background-image: url("https://www.todoiphone.net/wp-content/uploads/2014/03/WhatsApp-Wallpaper-39.jpg");
+    overflow: auto;
+}
+.message {
+    border: 1px solid black;
+    margin: 5px;
+    padding: 10px;
+    max-width: 80%;
+    width: auto;
+    margin-right: auto;
+    border-radius: 20px 20px 20px 0px;
+    background-color: white;
+}
+.me {
+    border: 1px solid black;
+    margin: 5px;
+    padding: 10px;
+    max-width: 80%;
+    width: auto;
+    border-radius: 20px 20px 0px 20px;
+    background-color: rgb(141, 238, 165);
+    margin-left: auto;
+    margin-right: 20px;
+}
+.sendbut {
+    height: 100%;
+    width: 15%;
+    border-radius: 0px 0px 25px 0px;
+}
+.room {
+    height: 25px;
+    width: 600px;
+}
+.nameroom {
+    position: absolute;
+    left: 15px;
+    top: 4px;
+    font-weight: bold;
+}
+.clients {
+    position: absolute;
+    left: 550px;
+    top: 4px;
+}
+.onroom {
+    position: absolute;
+    left: 950px;
+    top: 10px;
+    height: 870px;
+    width: 600px;
+    background-color: white;
+    border-radius: 20px;
+}
+canvas {
+    cursor: crosshair;
+    border: black solid 1px;
+}
+.canvas {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+}
+.eraser {
+    background-image: url('eraser.png');
+    background-size: cover;
+}
+.userConnected {
+    padding: 5px;
+    border: 1px solid black;
+    background-color: rgb(113, 196, 235);
+    border-radius: 25px;
+    font-size: 10px;
+    min-height: 30px;
+    text-align: center;
+}
+.userDisconnected {
+    padding: 5px;
+    border: 1px solid black;
+    background-color: rgb(250, 117, 93);
+    border-radius: 25px;
+    font-size: 10px;
+    min-height: 30px;
+    text-align: center;
+}
+.inputme {
+    padding-left: 10px;
+    border-radius: 20px;
+    width: 530px;
+    font-size: 20px;
+    padding: 5px;   
+}
+.sendbut {
+    height: 40px;
+    width: 50px;
+    border-radius: 25px;
+    background-color: #F2363C;
+}
+select {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 0 29 14" width="29"><path fill="#d1d1d1" d="M9.37727 3.625l5.08154 6.93523L19.54036 3.625"/></svg>') center right no-repeat;
+    padding-right: 3.0rem;
+}
+    select:focus {
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 0 29 14" width="29"><path fill="#9b4dca" d="M9.37727 3.625l5.08154 6.93523L19.54036 3.625"/></svg>');
+    }
+label[for=color01] {
+    background: gold;
+}
+label[for=color02] {
+    background: darkorange;
+}
 
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
+label[for=color03] {
+    background: navy;
+}
+
+label[for=color04] {
+    background: yellowgreen;
+}
+
+label[for=color05] {
+    background: firebrick;
+}
+
+label[for=color06] {
+    background: powderblue;
+}
+
+label[for=color07] {
+    background: white;
+    border: 1px black solid
+}
+label {
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    position: relative;
+    padding-right: 5px;
+    border-radius: 50%;
+    text-shadow: 1px 1px 2px #000;
+    color: #fff;
+    font-size: 32px;
+    line-height: 46px;
 }
