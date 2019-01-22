@@ -1,116 +1,17 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-    <title>Chat App</title>
-    <link type="text/css" rel="stylesheet" media="all" href="style.css" />
-    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
-        crossorigin="anonymous">
-</head>
-
-<body>
-    <div id="general" class="container; display: flex">
-        <div style="display: flex; flex-direction: column">
-            <div style="display: flex; height: 70px; padding-left: 25px"><div class="title">Chat App</div></div>
-            <div style="display: flex; flex-direction: row; height: 90%">
-                <div style="width: 15%; height: 500px; padding: 20px; background-color: #222234; border: 5px solid white; border-radius: 20px; margin: 20px; color: white; justify-content: space-between; flex-direction: column">
-                    <div>
-                            <div>Rooms:</div>
-                            <div>1</div>
-                            <div>1</div>
-                            <div>1</div>
-                            <div>1</div>
-                            <div>1</div>
-                    </div>
-                    <div>
-                        User
-                    </div>
-                </div>
-                <div style="background-color: red; width: 50%; height: 600px">A</div>
-                <div style="background-color: yellow; width: 35%; height: 600px">A</div>
-            </div>
+<div style="display: flex; flex: 1; background-color: red;flex-direction: column">
+    <div style="display: flex; flex:1; background-color: pink;flex-direction: row;">
+        <div style="display: flex; flex:1; background-color: green; justify-content: space-between; align-items: center; flex-direction: row">
+            <div>A</div>
+            <div>B</div>
+            <div>C</div>
         </div>
-        <!-- <div id="login" class="login">
-            <h1>Chat App</h1>
-            <div style="display:flex; background-color: white; border-radius: 20px; width: 250px; height: 40px; margin-bottom: 20px">
-                <div style="display: flex; justify-content: center; align-items: center; padding-left: 15px">
-                    <i class="fa fa-user-circle" style="color: black; font-size: 20px;padding-right: 10px"></i>
-                    <input id="logUserName" style="align-items: center; border: 0px; font-size: 15px" placeholder="Username">
-                </div>
-            </div>
-            <div style="display:flex; background-color: white; border-radius: 20px; width: 250px; height: 40px; margin-bottom: 20px">
-                <div style="display: flex; justify-content: center; align-items: center; padding-left: 15px">
-                    <i class="fa fa-comments" style="color: black; font-size: 20px;padding-right: 10px"></i>
-                    <input id="logRoomName" style="align-items: center; border: 0px; font-size: 15px" placeholder="Room Name">
-                </div>
-            </div>
-            <div style="display:flex; background-color: #F2363C; border-radius: 20px; width: 150px; height: 40px; margin-bottom: 20px; margin: auto; font-weight: 700">
-                <div id="logCreate" style="display: flex; justify-content: center; flex-direction: column; align-content: center; margin: auto; font-size: 20px    ">
-                    Enter
-                </div>
-            </div>
-        </div> -->
-        <!-- <div id="inapp" class="inapp">
-            <div id="fixedUsername" class="fixedUsername">
-                Username:
-                <div id="username" class="username">
-                    Username
-                </div>
-            </div>
-            <button id="rooms">Rooms</button>
-            <div id="onroom">
-                <div class="onroom">
-                    <canvas id="drawCanvas" width="700px" height="300px">
-                    </canvas>
-                    <div class="canvas">
-                        <section id="colorSwatch">
-                            <input type="radio" name="color" id="color01" data-color="gold" checked><label for="color01"></label>
-                            <input type="radio" name="color" id="color02" data-color="darkorange"> <label for="color02"></label>
-                            <input type="radio" name="color" id="color03" data-color="navy"> <label for="color03"></label>
-                            <input type="radio" name="color" id="color04" data-color="yellowgreen"> <label for="color04"></label>
-                            <input type="radio" name="color" id="color05" data-color="firebrick"> <label for="color05"></label>
-                            <input type="radio" name="color" id="color06" data-color="powderblue"> <label for="color06"></label>
-                            <input type="radio" name="color" id="color07" data-color="white"> <label for="color07"
-                                class="eraser"></label>
-                        </section>
-                    </div>
-
-                </div>
-                <div class="room">
-                    <div id="nameroom" class="nameroom">
-                        Room 1
-                    </div>
-                    <div id="clients" class="clients">
-                        1
-                    </div>
-                </div>
-
-                <div class="container_messages">
-                    <div id="messages" class="messages">
-                    </div>
-                    <div class="sendmessage">
-                        <input id="inputme" class="inputme">
-                        <button class="sendbut" id="sendbutton">Send</button>
-                    </div>
-                </div>
-            </div>
-            <div id="menu" class="menu">
-                <div>
-                    Rooms:
-                </div>
-                <div id="contlistrooms" class="container">
-                    <div id="listrooms" class="listrooms">
-                    </div>
-                </div>
-            </div>
-        </div> -->
-
+        <div style="flex:1; background-color: greenyellow;"></div>
+        <div style="flex:1; background-color: purple"></div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script type="text/javascript" src="sillyclient.js"></script>
-    <script type="text/javascript" src="code.js"></script>
-</body>
-
-</html>
+    <div style="display: flex; flex:1; background-color: yellow">
+        <div style="flex:1; background-color: greenyellow;"></div>
+        <div style="flex:1; background-color: purple"></div>
+        <div style="flex:1; background-color: green; width: 100%"></div>
+    </div>
+    <div style="flex:1; background-color: blue"></div>
+</div>
