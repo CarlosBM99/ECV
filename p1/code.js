@@ -1,7 +1,11 @@
 var sendButton = document.querySelector("#sendbutton")
 var input = document.querySelector("#inputme")
 var messages_container = document.querySelector("#messages")
-sendButton.addEventListener('click', sendMessage)
+sendButton.addEventListener('click', function() {
+    if(input.value !== ''){
+        sendMessage()
+    }
+})
 var menu = document.querySelector('#menu')
 var inapp = document.querySelector('#inapp')
 var rooms = document.querySelector('#rooms')
@@ -11,7 +15,7 @@ refreshRooms.addEventListener('click', showRooms)
 
 function showRooms() {
     console.log('YESO')
-    //checkServer()
+    checkServer()
     // menu.style.display = menu.style.display === 'inline' ? 'none' : 'inline'
     // onroom.style.display = onroom.style.display === 'none' ? 'inline' : 'none'
 }
@@ -185,7 +189,6 @@ server.on_user_connected = function (user_id) {
     checkServer()
     checkRoomInfo()
     var user_con = document.createElement('div')
-    user_con.className = 'contflex'
     var user_con2 = document.createElement('div')
     user_con2.className = 'userConnected'
     user_con2.innerHTML = 'New User: ' + server.clients[user_id].name + '!!'
@@ -204,7 +207,6 @@ server.on_user_disconnected = function (user_id) {
     checkServer()
     checkRoomInfo()
     var user_con = document.createElement('div')
-    user_con.className = 'contflex'
     var user_con2 = document.createElement('div')
     user_con2.className = 'userDisconnected'
     user_con2.innerHTML = 'User disconnected: ' + 'user_' + user_id + '!!'
@@ -291,7 +293,9 @@ function onKey(e, type) {
     //Enter Key
     if (e.which == 13) {
         if (type === 'inputme') {
-            sendMessage()
+            if(inputme.value !== ''){
+                sendMessage()
+            }
         }
         else if (type === 'login') {
             loginCreate()
