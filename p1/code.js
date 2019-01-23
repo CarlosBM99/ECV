@@ -35,9 +35,9 @@ logRoomName.addEventListener('keydown', function (e) {
 var login = document.querySelector('.login')
 var user_name = ''
 function conncectToServer(roomName, userName) {
-    //server.connect("ecv-etic.upf.edu:9000", roomName);
+    server.connect("ecv-etic.upf.edu:9000", roomName);
     //server.connect("tamats.com:55000", roomName);
-    server.connect("localhost:55000", roomName);
+    //server.connect("localhost:55000", roomName);
 }
 server.on_ready = function () {
     server.user_name = user_name

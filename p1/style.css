@@ -1,5 +1,13 @@
+.mainContainer {
+    display: flex; 
+    flex: 1; 
+    height: 100%; 
+    flex-direction: column;
+    background-image: url('https://i.imgur.com/R3cpQ9R.gif');
+    background-size: cover
+}
 body {
-    background-color: #19191e;
+    /* background-color: #19191e; */
     background-size: cover;
     font-family: 'Raleway', sans-serif;
 }
@@ -55,7 +63,8 @@ h1 {
 .rooms {
     display: flex;
     flex: 5;
-    flex-direction: column
+    flex-direction: column;
+    overflow: auto;
 }
 .room {
     display: flex;
