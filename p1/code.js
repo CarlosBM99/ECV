@@ -6,11 +6,14 @@ var menu = document.querySelector('#menu')
 var inapp = document.querySelector('#inapp')
 var rooms = document.querySelector('#rooms')
 var onroom = document.querySelector('#onroom')
+var refreshRooms = document.querySelector('#refreshRooms')
+refreshRooms.addEventListener('click', showRooms)
 
 function showRooms() {
-    checkServer()
-    menu.style.display = menu.style.display === 'inline' ? 'none' : 'inline'
-    onroom.style.display = onroom.style.display === 'none' ? 'inline' : 'none'
+    console.log('YESO')
+    //checkServer()
+    // menu.style.display = menu.style.display === 'inline' ? 'none' : 'inline'
+    // onroom.style.display = onroom.style.display === 'none' ? 'inline' : 'none'
 }
 
 var server = new SillyClient();
@@ -151,6 +154,13 @@ function checkServer() {
         for (var room in report.rooms) {
             var div = document.createElement('div')
             div.style.display = 'flex'
+            div.style.marginBottom = '10px'
+            div.style.marginTop = '10px'
+            div.style.padding = '10px'
+            div.style.color = 'white'
+            div.style.borderRadius = '10px'
+            div.style.maxWidth = '130px'
+            div.style.backgroundColor = 'black'
             var nameRoom = document.createElement('div')
             var separator = document.createElement('div')
             nameRoom.style.flexDirection = 'row'
@@ -158,7 +168,7 @@ function checkServer() {
             numberUsers.style.paddingLeft = '10px'
             if (room !== '') {
                 nameRoom.innerHTML = room
-                separator.innerHTML = ' -> '
+                separator.innerHTML = ': '
                 nameRoom.addEventListener('click', enterRoom)
                 numberUsers.innerHTML = report.rooms[room]
                 numberUsers.setAttribute('id', 'numberusers')
@@ -214,8 +224,6 @@ function enterRoom(event) {
     if (!(name === server.room.name)) {
         conncectToServer(name)
     }
-    menu.style.display = 'none'
-    onroom.style.display = 'inline'
 }
 
 function recieveMessage(message) {

@@ -12,84 +12,89 @@
 </head>
 
 <body>
-     <div id="login" class="login">
+    <div id="login" class="login">
         <h1>Chat App</h1>
         <div class="inputUsername">
             <div class="insideUsernameBubble">
                 <i class="fa fa-user-circle avatar"></i>
-                <input id="logUserName" style="align-items: center; border: 0px; font-size: 15px" placeholder="Username">
+                <input id="logUserName" class="logUserName" placeholder="Username">
             </div>
         </div>
-        <div style="display:flex; background-color: white; border-radius: 20px; width: 250px; height: 40px; margin-bottom: 20px">
-            <div style="display: flex; justify-content: center; align-items: center; padding-left: 15px">
-                <i class="fa fa-comments" style="color: black; font-size: 20px;padding-right: 10px"></i>
-                <input id="logRoomName" style="align-items: center; border: 0px; font-size: 15px" placeholder="Room Name">
+        <div class="inputUsername">
+            <div class="insideUsernameBubble">
+                <i class="fa fa-comments inputRoomNameI"></i>
+                <input id="logRoomName" class="inputRoomNameII" placeholder="Room Name">
             </div>
         </div>
-        <div style="display:flex; background-color: #F2363C; border-radius: 20px; width: 150px; height: 40px; margin-bottom: 20px; margin: auto; font-weight: 700">
-            <div id="logCreate" style="display: flex; justify-content: center; flex-direction: column; align-content: center; margin: auto; font-size: 20px    ">
+        <div class="buttonEnter">
+            <div id="logCreate" class="buttonEnterB">
                 Enter
             </div>
         </div>
-    </div> 
-     <div id="inapp" class="inapp">
-         <div class="h2">
-             Chat App
-         </div>
-         <div class="roomsZone">
-             <div class="container">
-                 Rooms:
-             </div>
-             <div id="contlistrooms" class="container">
-                 <div id="listrooms" class="listrooms">
-                 </div>
-             </div>
-             <div class="userZone">
-                 <div id="username" class="username">
-                     Username
-                 </div>
-             </div>
-         </div>
-
-            <div class="onroom">
-                <canvas id="drawCanvas" width="600px" height="800px"></canvas>
-                <div class="canvas">
-                    <section id="colorSwatch">
-                        <input type="radio" name="color" id="color01" data-color="gold" checked=checked /><label for="color01"></label>
-                        <input type="radio" name="color" id="color02" data-color="darkorange" /> <label for="color02"></label>
-                        <input type="radio" name="color" id="color03" data-color="navy" /> <label for="color03"></label>
-                        <input type="radio" name="color" id="color04" data-color="yellowgreen" /> <label for="color04"></label>
-                        <input type="radio" name="color" id="color05" data-color="firebrick" /> <label for="color05"></label>
-                        <input type="radio" name="color" id="color06" data-color="powderblue" /> <label for="color06"></label>
-                        <input type="radio" name="color" id="color07" data-color="white" /> <label for="color07" class="eraser"></label>
-                    </section>
-                </div>
-
+    </div>
+    <div id="inapp" class="inapp">
+        <div class="h2">
+            Chat App
+        </div>
+        <div class="roomsZone">
+            <div class="container">
+                Rooms:
             </div>
-
-            <div class="container_messages">
-                <div class="room">
-                    <div id="nameroom" class="nameroom">
-                        Room 1
-                    </div>
-                    <div id="clients" class="clients">
-                        1
-                    </div>
-                </div>
-                <div id="messages" class="messages">
-                </div>
-
-                <div class="sendmessage">
-                    <input id="inputme" class="inputme" />
-                    <button class="sendbut" id="sendbutton">Send</button>
+            <div id="refreshRooms" class="containeri">Refresh</div>
+            
+            <div id="contlistrooms" class="container">
+                <div id="listrooms" class="listrooms">
                 </div>
             </div>
-         
-         <div id="menu" class="menu">
-             
-         </div>
-     </div> 
- 
+            <div class="userZone">
+                <div id="username" class="username">
+                    Username
+                </div>
+                <!-- <i class="fa fa-refresh usernamei"></i> -->
+                <i class="fa fa-user-circle usernamei"></i>
+            </div>
+        </div>
+
+        <div class="onroom">
+            <canvas id="drawCanvas" width="400px" height="522px"></canvas>
+            <div class="canvas">
+                <section id="colorSwatch">
+                    <input type="radio" name="color" id="color01" data-color="gold" checked=checked /><label for="color01"></label>
+                    <input type="radio" name="color" id="color02" data-color="darkorange" /> <label for="color02"></label>
+                    <input type="radio" name="color" id="color03" data-color="navy" /> <label for="color03"></label>
+                    <input type="radio" name="color" id="color04" data-color="yellowgreen" /> <label for="color04"></label>
+                    <input type="radio" name="color" id="color05" data-color="firebrick" /> <label for="color05"></label>
+                    <input type="radio" name="color" id="color06" data-color="powderblue" /> <label for="color06"></label>
+                    <input type="radio" name="color" id="color07" data-color="white" /> <label for="color07" class="eraser"></label>
+                </section>
+            </div>
+
+        </div>
+
+        <div class="container_messages">
+            <div class="room">
+                <div id="nameroom" class="nameroom">
+                    Room 1
+                </div>
+                <div id="clients" class="clients">
+                    1
+                </div>
+                <i class="fa fa-user-circle clientsi"></i>
+            </div>
+            <div id="messages" class="messages">
+            </div>
+
+            <div class="sendmessage">
+                <input id="inputme" class="inputme" />
+                <button class="sendbut" id="sendbutton">Send</button>
+            </div>
+        </div>
+
+        <div id="menu" class="menu">
+
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="sillyclient.js"></script>
     <script type="text/javascript" src="code.js"></script>

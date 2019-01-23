@@ -4,10 +4,10 @@ body {
     font-family: 'Raleway', sans-serif;
 }
 h1 {
-  text-align: center;
-  color: white;
-  text-shadow: 0 -1px 0 #fff, 0 1px 0 #2e2e2e, 0 2px 0 #2c2c2c, 0 3px 0 #2a2a2a, 0 4px 0 #282828, 0 5px 0 #262626, 0 6px 0 #242424, 0 7px 0 #222, 0 8px 0 #202020, 0 9px 0 #1e1e1e, 0 10px 0 #1c1c1c, 0 11px 0 #1a1a1a, 0 12px 0 #181818, 0 13px 0 #161616, 0 14px 0 #141414, 0 15px 0 #121212, 0 22px 30px rgba(0,0,0,0.9);
-  font-size: 70px;
+    text-align: center;
+    color: white;
+    text-shadow: 0 -1px 0 #fff, 0 1px 0 #2e2e2e, 0 2px 0 #2c2c2c, 0 3px 0 #2a2a2a, 0 4px 0 #282828, 0 5px 0 #262626, 0 6px 0 #242424, 0 7px 0 #222, 0 8px 0 #202020, 0 9px 0 #1e1e1e, 0 10px 0 #1c1c1c, 0 11px 0 #1a1a1a, 0 12px 0 #181818, 0 13px 0 #161616, 0 14px 0 #141414, 0 15px 0 #121212, 0 22px 30px rgba(0,0,0,0.9);
+    font-size: 70px;
 }
 .h2 {
     text-align: left;
@@ -16,9 +16,9 @@ h1 {
     font-size: 50px;
 }
 .title {
-  color: white;
-  text-shadow: 0 -1px 0 #fff, 0 1px 0 #2e2e2e, 0 2px 0 #2c2c2c, 0 3px 0 #2a2a2a, 0 4px 0 #282828, 0 5px 0 #262626, 0 6px 0 #242424, 0 7px 0 #222, 0 8px 0 #202020, 0 9px 0 #1e1e1e, 0 10px 0 #1c1c1c, 0 11px 0 #1a1a1a, 0 12px 0 #181818, 0 13px 0 #161616, 0 14px 0 #141414, 0 15px 0 #121212, 0 22px 30px rgba(0,0,0,0.9);
-  font-size: 40px;
+    color: white;
+    text-shadow: 0 -1px 0 #fff, 0 1px 0 #2e2e2e, 0 2px 0 #2c2c2c, 0 3px 0 #2a2a2a, 0 4px 0 #282828, 0 5px 0 #262626, 0 6px 0 #242424, 0 7px 0 #222, 0 8px 0 #202020, 0 9px 0 #1e1e1e, 0 10px 0 #1c1c1c, 0 11px 0 #1a1a1a, 0 12px 0 #181818, 0 13px 0 #161616, 0 14px 0 #141414, 0 15px 0 #121212, 0 22px 30px rgba(0,0,0,0.9);
+    font-size: 40px;
 }
 .login {
     padding-top: 70px;
@@ -47,19 +47,67 @@ h1 {
     position: absolute;
     left: 10px;
     top: 90px;
-    height: 750px;
+    height: 500px;
     width: 220px;
     background-color: white;
     border-radius: 20px 20px 0px 0px;
 }
 .userZone {
     position: absolute;
-    top: 750px;
+    top: 500px;
     height: 50px;
     width: 220px;
     background-color: grey;    
     border-radius: 0px 0px 20px 20px;
 }
+.logUserName {
+    align-items: center; 
+    border: 0px; 
+    font-size: 15px
+}
+.inputRoomName {
+    display:flex; 
+    background-color: white; 
+    border-radius: 20px; 
+    width: 250px; 
+    height: 40px; 
+    margin-bottom: 20px
+}
+.inputRoomNameI{
+    color: black; 
+    font-size: 20px;
+    padding-right: 10px
+}
+.inputRoomNameII {
+    align-items: center; 
+    border: 0px; 
+    font-size: 15px
+}
+.inputRoomNameB{
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    padding-left: 15px
+}
+.buttonEnterB{
+    display: flex; 
+    justify-content: center; 
+    flex-direction: column; 
+    align-content: center; 
+    margin: auto; 
+    font-size: 20px    
+}
+.buttonEnter{
+    display:flex; 
+    background-color: #F2363C; 
+    border-radius: 20px; 
+    width: 150px; 
+    height: 40px; 
+    margin-bottom: 20px; 
+    margin: auto; 
+    font-weight: 700
+}
+
 .avatar {
     color: black;
     font-size: 20px;
@@ -70,15 +118,25 @@ h1 {
     left: 40px;
     top: 15px;
 }
+.usernamei {
+    position: absolute;
+    left: 15px;
+    top: 17px;
+}
 .inapp {
     display: none;
 }
 .container {
     position: absolute;
-    left: 10px;
+    left: 17px;
     top: 10px;
     height: 600px;
     width: 220px;
+}
+.containeri {
+    position: absolute;
+    left: 120px;
+    top: 10px;
 }
 .listrooms {
     position: absolute;
@@ -90,15 +148,15 @@ h1 {
 .container_messages {
     position: absolute;
     left: 300px;
-    top: 10px;
-    height: 750px;
+    top: 80px;
+    height: 500px;
     width: 600px;
     background-color: white;
     border-radius: 20px;
 }
 .messages {
     border: 1px solid black;
-    height: 800px;
+    height: 500px;
     width: 600px;
     background-image: url("https://www.todoiphone.net/wp-content/uploads/2014/03/WhatsApp-Wallpaper-39.jpg");
     overflow: auto;
@@ -144,12 +202,17 @@ h1 {
     left: 550px;
     top: 4px;
 }
+.clientsi {
+    position: absolute;
+    left: 562px;
+    top: 5px;
+}
 .onroom {
     position: absolute;
     left: 950px;
-    top: 10px;
-    height: 870px;
-    width: 600px;
+    top: 80px;
+    height: 522px;
+    width: 400px;
     background-color: white;
     border-radius: 20px;
 }
@@ -233,13 +296,13 @@ label[for=color07] {
 }
 label {
     display: inline-block;
-    width: 48px;
-    height: 48px;
+    width: 25px;
+    height: 25px;
     position: relative;
     padding-right: 5px;
     border-radius: 50%;
     text-shadow: 1px 1px 2px #000;
     color: #fff;
-    font-size: 32px;
-    line-height: 46px;
+    font-size: 10px;
+    line-height: 20px;
 }
