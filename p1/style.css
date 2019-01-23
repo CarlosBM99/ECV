@@ -31,11 +31,11 @@ h1 {
     align-items: center
 }
 .header {
-    display: flex;
+    display: none;
     flex: 1;
 }
 .content {
-    display: flex;
+    display: none;
     flex: 8;
 }
 .inputUsername {
@@ -78,6 +78,7 @@ h1 {
     display: flex;
     flex:2.5;
     flex-direction: column;
+    padding: 20px
 }
 .headMessages {
     display: flex;
@@ -87,18 +88,79 @@ h1 {
 .roomName{
     display: flex;
     flex:3;
-    background-color: green;
+    flex-direction: column;
+    justify-content: center;
+    background-color: white;
+    padding-left: 20px;
 }
 .roomClients{
     display: flex;
     flex:1;
-    background-color: tomato;
+    background-color: white;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 20px
+}
+.numberRoomClients{
+    padding-right: 5px
 }
 .bodyMessages {
     display: flex;
     flex:5;
     background-image: url("https://www.todoiphone.net/wp-content/uploads/2014/03/WhatsApp-Wallpaper-39.jpg");
     flex-direction: column;
+}
+.containerMessageMe{
+    display:flex;
+    justify-content: flex-end;
+}
+.messageMe{
+    background-color: rgb(141, 238, 165);
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    align-items: flex-end;
+    max-width: 50%;
+}
+.containerMessageOther{
+    display:flex;
+    justify-content: flex-start;
+}
+.messageOther{
+    display: flex;
+    width: auto;
+    background-color: white;
+    flex-direction: column;
+    max-width: 50%;
+}
+.containerMessageUserConnected{
+    display:flex;
+    justify-content: center;
+}
+.messageUserConnected{
+    display: flex;
+    width: auto;
+    background-color: blue;
+    flex-direction: column;
+    max-width: 50%;
+}
+.containerMessageUserDisconnected{
+    display:flex;
+    justify-content: center;
+}
+.messageUserDisconnected{
+    display: flex;
+    width: auto;
+    background-color: tomato;
+    flex-direction: column;
+    max-width: 50%;
+}
+.userMessageMe{
+    flex:1;
+}
+.messageTextMe{
+    flex:1;
 }
 .inputMessages {
     display: flex;
@@ -235,14 +297,23 @@ h1 {
     padding-right: 10px; 
 
 }
+canvas {
+    cursor: crosshair;
+    border: black solid 1px;
+}
+.canvas {
+    width: 500px;
+    height: 400px;
+}
 .canvasZone{
-    display: flex;
-    flex:2.5;
+    display: block;
+    width: 500px;
+    height: 400px;
     flex-direction: column;
 }
 .bodyCanvas{
-    display: flex;
-    flex:7;
+    width: 500px;
+    height: 400px;
     background-color: white
 }
 .toolsCanvas{
@@ -311,17 +382,6 @@ h1 {
     width: 400px;
     background-color: white;
     border-radius: 20px;
-}
-canvas {
-    cursor: crosshair;
-    border: black solid 1px;
-}
-.canvas {
-    display: flex;
-    flex: 1
-}
-#colorSwatch {
-
 }
 input[type=radio] {
 	margin: 0;

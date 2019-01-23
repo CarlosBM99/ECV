@@ -1,16 +1,17 @@
-/* var sendButton = document.querySelector("#sendbutton")
-var input = document.querySelector("#inputme")
-var messages_container = document.querySelector("#messages")
+var sendButton = document.querySelector(".sendButton")
+var input = document.querySelector(".inputText")
+var bodyMessages = document.querySelector(".bodyMessages")
 sendButton.addEventListener('click', function() {
     if(input.value !== ''){
         sendMessage()
     }
 })
-var menu = document.querySelector('#menu')
-var inapp = document.querySelector('#inapp')
-var rooms = document.querySelector('#rooms')
-var onroom = document.querySelector('#onroom')
-var refreshRooms = document.querySelector('#refreshRooms')
+//var menu = document.querySelector('#menu')
+var inapp = document.querySelector('.content')
+var header = document.querySelector('.header')
+//var rooms = document.querySelector('#rooms')
+//var onroom = document.querySelector('#onroom')
+var refreshRooms = document.querySelector('.refreshRooms')
 refreshRooms.addEventListener('click', showRooms)
 
 function showRooms() {
@@ -26,12 +27,12 @@ var messages = {}
 var logCreate = document.querySelector('#logCreate')
 logCreate.addEventListener('click', loginCreate)
 var logUserName = document.querySelector('#logUserName')
-var userName = document.querySelector('#username')
+var userName = document.querySelector('.user')
 var logRoomName = document.querySelector('#logRoomName')
 logRoomName.addEventListener('keydown', function (e) {
     onKey(e, 'login')
 })
-var login = document.querySelector('#login')
+var login = document.querySelector('.login')
 var user_name = ''
 function conncectToServer(roomName, userName) {
     //server.connect("ecv-etic.upf.edu:9000", roomName);
@@ -48,6 +49,7 @@ function loginCreate() {
         conncectToServer(logRoomName.value, logUserName.value)
         userName.innerHTML = logUserName.value
         inapp.style.display = 'flex'
+        header.style.display = 'flex'
         login.style.display = 'none'
     }
 }
@@ -119,10 +121,12 @@ function drawFromStream(message) {
     drawOnCanvas(message.color, message.plots);
 }
 server.on_message = function (user_id, message) {
+    console.log('AAAAAA- All messages')
     if (JSON.parse(message).type === 'allmessages') {
         //delete previous messages from another room
-        while (messages_container.firstChild) {
-            messages_container.removeChild(messages_container.firstChild);
+        console.log('AAAAAA- All messages')
+        while (bodyMessages.firstChild) {
+            bodyMessages.removeChild(bodyMessages.firstChild);
             ctx.fillStyle = "#fff";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
@@ -139,85 +143,81 @@ checkRoomInfo()
 function checkRoomInfo() {
     server.on_room_info = function (info) {
         //to know which users are inside
-        var nameroom = document.querySelector('#nameroom')
+        var nameroom = document.querySelector('.roomName')
         nameroom.innerHTML = info.name
-        var clients = document.querySelector('#clients')
+        var clients = document.querySelector('.numberRoomClients')
         clients.innerText = info.clients.length
     };
 }
 function checkServer() {
     server.getReport(function (report) {
-        var contlistrooms = document.querySelector('#contlistrooms')
         var checkListrooms = document.querySelector('#listrooms')
+        var rooms = document.querySelector('.rooms')
         if (checkListrooms) {
-            contlistrooms.removeChild(checkListrooms)
+            rooms.removeChild(checkListrooms)
         }
         var listrooms = document.createElement('div')
-        listrooms.className = 'listrooms'
         listrooms.setAttribute('id', 'listrooms')
         for (var room in report.rooms) {
-            var div = document.createElement('div')
-            div.style.display = 'flex'
-            div.style.marginBottom = '10px'
-            div.style.marginTop = '10px'
-            div.style.padding = '10px'
-            div.style.color = 'white'
-            div.style.borderRadius = '10px'
-            div.style.maxWidth = '130px'
-            div.style.backgroundColor = 'black'
+            var divCont = document.createElement('div')
+            var divRoom = document.createElement('div')
+            divRoom.className = 'room'
             var nameRoom = document.createElement('div')
             var separator = document.createElement('div')
-            nameRoom.style.flexDirection = 'row'
             var numberUsers = document.createElement('div')
-            numberUsers.style.paddingLeft = '10px'
             if (room !== '') {
                 nameRoom.innerHTML = room
                 separator.innerHTML = ': '
-                nameRoom.addEventListener('click', enterRoom)
                 numberUsers.innerHTML = report.rooms[room]
-                numberUsers.setAttribute('id', 'numberusers')
-                div.appendChild(nameRoom)
-                div.appendChild(separator)
-                div.appendChild(numberUsers)
-                listrooms.appendChild(div)
+                nameRoom.addEventListener('click', enterRoom)
+                divRoom.appendChild(nameRoom)
+                divRoom.appendChild(separator)
+                divRoom.appendChild(numberUsers)
+                divCont.appendChild(divRoom)
+                listrooms.appendChild(divCont)
             }
-            contlistrooms.appendChild(listrooms)
         }
+        rooms.appendChild(listrooms)
     })
 }
 server.on_user_connected = function (user_id) {
     checkServer()
     checkRoomInfo()
-    var user_con = document.createElement('div')
-    var user_con2 = document.createElement('div')
-    user_con2.className = 'userConnected'
-    user_con2.innerHTML = 'New User: ' + server.clients[user_id].name + '!!'
-    user_con.appendChild(user_con2)
-    messages_container.appendChild(user_con)
-    var numberusers = document.querySelector('#clients')
+    var containerMessageUserConnected = document.createElement('div')
+    containerMessageUserConnected.className = 'containerMessageUserConnected'
+    var messageUserConnected = document.createElement('div')
+    messageUserConnected.className = 'messageUserConnected'
+    messageUserConnected.innerHTML = 'User connected: ' + 'user_' + user_id + '!!'
+    containerMessageUserConnected.appendChild(messageUserConnected)
+    bodyMessages.appendChild(containerMessageUserConnected)
+    var numberusers = document.querySelector('.numberRoomClients')
     var num = parseInt(numberusers.innerHTML) + 1
     numberusers.innerHTML = num
     //send the messages to the new user
     let message = { type: "allmessages", msg: messages[server.room.name], user: server.user_name }
     server.sendMessage(message, user_id)
-    var elem = document.getElementById('messages');
-    elem.scrollTop = elem.scrollHeight
+    bodyMessages.scrollTop = elem.scrollHeight
 }
 server.on_user_disconnected = function (user_id) {
     checkServer()
     checkRoomInfo()
-    var user_con = document.createElement('div')
-    var user_con2 = document.createElement('div')
-    user_con2.className = 'userDisconnected'
-    user_con2.innerHTML = 'User disconnected: ' + 'user_' + user_id + '!!'
-    user_con.appendChild(user_con2)
-    messages_container.appendChild(user_con)
-    var numberusers = document.querySelector('#clients')
+    //var user_con = document.createElement('div')
+    //var user_con2 = document.createElement('div')
+    //user_con2.className = 'userDisconnected'
+    //user_con2.innerHTML = 'User disconnected: ' + 'user_' + user_id + '!!'
+    //user_con.appendChild(user_con2)
+    var containerMessageUserDisconnected = document.createElement('div')
+    containerMessageUserDisconnected.className ='containerMessageUserDisconnected'
+    var messageUserDisconnected = document.createElement('div')
+    messageUserDisconnected.className ='messageUserDisconnected'
+    messageUserDisconnected.innerHTML = 'User disconnected: ' + 'user_' + user_id + '!!'
+    containerMessageUserDisconnected.appendChild(messageUserDisconnected)
+    bodyMessages.appendChild(containerMessageUserDisconnected)
+    var numberusers = document.querySelector('.numberRoomClients')
     var num = parseInt(numberusers.innerHTML) - 1
     numberusers.innerHTML = num
     // send the messages to the new user
-    var elem = document.getElementById('messages');
-    elem.scrollTop = elem.scrollHeight
+    bodyMessages.scrollTop = elem.scrollHeight
 }
 
 function enterRoom(event) {
@@ -230,16 +230,22 @@ function enterRoom(event) {
 
 function recieveMessage(message) {
     if (JSON.parse(message).type !== 'canvas') {
-        var element = document.createElement('div');
-        var childElement = document.createElement('div')
-        var childElement2 = document.createElement('div')
-        childElement.className = 'name'
-        childElement.innerHTML = JSON.parse(message).user
-        element.appendChild(childElement)
-        element.className = "message"
-        childElement2.innerHTML = JSON.parse(message).msg
-        element.appendChild(childElement2)
-        messages_container.appendChild(element)
+        var bodyMessages = document.querySelector('.bodyMessages');
+        var containerMessageOther = document.createElement('div');
+        containerMessageOther.className = 'containerMessageOther'
+        var messageOther = document.createElement('div');
+        messageOther.className = 'messageOther'
+        var userMessageOther = document.createElement('div');
+        userMessageOther.className = 'userMessageOther'
+        userMessageOther.innerHTML = JSON.parse(message).user
+        var messageTextOther = document.createElement('div');
+        messageTextOther.className = 'messageTextOther'
+        messageTextOther.innerHTML = JSON.parse(message).msg
+        messageOther.appendChild(userMessageOther)
+        messageOther.appendChild(messageTextOther)
+        containerMessageOther.appendChild(messageOther)
+        bodyMessages.appendChild(containerMessageOther)
+
         var elem = document.getElementById('messages');
         elem.scrollTop = elem.scrollHeight
         let roomname = server.room.name
@@ -257,16 +263,21 @@ function recieveMessage(message) {
 
 function sendMessage(type, mes) {
     if (type !== 'canvas') {
-        var element = document.createElement('div');
-        var childElement = document.createElement('div')
-        var childElement2 = document.createElement('div')
-        childElement.className = 'myname'
-        childElement.innerHTML = server.user_name
-        element.appendChild(childElement)
-        childElement2.innerHTML = input.value
-        element.className = "me"
-        element.appendChild(childElement2)
-        messages_container.appendChild(element)
+        var bodyMessages = document.querySelector('.bodyMessages');
+        var containerMessageMe = document.createElement('div');
+        containerMessageMe.className = 'containerMessageMe'
+        var messageMe = document.createElement('div');
+        messageMe.className = 'messageMe'
+        var userMessageMe = document.createElement('div');
+        userMessageMe.className = 'userMessageMe'
+        userMessageMe.innerHTML = server.user_name
+        var messageTextMe = document.createElement('div');
+        messageTextMe.className = 'messageTextMe'
+        messageTextMe.innerHTML = input.value
+        messageMe.appendChild(userMessageMe)
+        messageMe.appendChild(messageTextMe)
+        containerMessageMe.appendChild(messageMe)
+        bodyMessages.appendChild(containerMessageMe)
         let message = { type: "msg", msg: input.value, user: server.user_name }
         server.sendMessage(message)
         let roomname = server.room.name
@@ -293,7 +304,7 @@ function onKey(e, type) {
     //Enter Key
     if (e.which == 13) {
         if (type === 'inputme') {
-            if(inputme.value !== ''){
+            if(input.value !== ''){
                 sendMessage()
             }
         }
@@ -301,4 +312,4 @@ function onKey(e, type) {
             loginCreate()
         }
     }
-}  */
+} 

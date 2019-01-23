@@ -5,7 +5,7 @@
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
         crossorigin="anonymous">
-    <!-- <div id="login" class="login">
+    <div id="login" class="login">
         <h1>Chat App</h1>
         <div class="inputUsername">
             <div class="insideUsernameBubble">
@@ -24,7 +24,7 @@
                 Enter
             </div>
         </div>
-    </div> -->
+    </div>
     <!-- <div style="display: flex; flex:1; background-color: pink;flex-direction: row;">
         <div style="display: flex; flex:1; background-color: green; width: 100%; justify-content: space-between; align-items: center; flex-direction: row">
             <div>A</div>
@@ -49,18 +49,20 @@
         <div class="roomsZone">
             <div class="nameRooms">
                 <div>Rooms</div>
-                <div>Refresh</div>
+                <div class="refreshRooms">Refresh</div>
             </div>
             <div class="rooms">
-                <div>
-                    <div class="room">
-                        AAAAA
+                <div id="listrooms">
+                    <!-- <div>
+                        <div class="room">
+                            AAA
+                        </div>
                     </div>
-                </div>
-                <div>
-                    <div class="room">
-                        AAAAA
-                    </div>
+                    <div>
+                        <div class="room">
+                            AAAAA
+                        </div>
+                    </div> -->
                 </div>
             </div>
             <div class="user">
@@ -70,10 +72,32 @@
         </div>
         <div class="messagesZone">
             <div class="headMessages">
-                <div class="roomName"></div>
-                <div class="roomClients"></div>
+                <div class="roomName">Room Name</div>
+                <div class="roomClients">
+                    <div class="numberRoomClients">1</div>
+                    <i class="fa fa-user-circle avatar"></i>
+                </div>
             </div>
-            <div class="bodyMessages"></div>
+            <div class="bodyMessages">
+                <!-- <div class="containerMessageMe">
+                    <div class="messageMe">
+                        <div class="userMessageMe">Carlos</div>
+                        <div class="messageTextMe">Hello Hello Hello </div>
+                    </div>
+                </div> -->
+                <!-- <div class="containerMessageOther">
+                    <div class="messageOther">
+                        <div class="userMessageOther">Carlos</div>
+                        <div class="messageTextOther">Hey Hey Hey Hey Hey Hey </div>
+                    </div>
+                </div> -->
+                <!-- <div class="containerMessageUserConnected">
+                    <div class="messageUserConnected">User connected</div>
+                </div> -->
+                <!-- <div class="containerMessageUserDisconnected">
+                    <div class="messageUserDisconnected">UserDisconnected</div>
+                </div> -->
+            </div>
             <div class="inputMessages">
                 <input class="inputText">
                 <button class="sendButton">Send</button>
@@ -96,4 +120,7 @@
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="sillyclient.js"></script>
+    <script type="text/javascript" src="code.js"></script>
 </div>
