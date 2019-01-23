@@ -78,7 +78,7 @@ h1 {
     display: flex;
     flex:2.5;
     flex-direction: column;
-    padding: 20px
+    padding: 20px;
 }
 .headMessages {
     display: flex;
@@ -110,10 +110,12 @@ h1 {
     flex:5;
     background-image: url("https://www.todoiphone.net/wp-content/uploads/2014/03/WhatsApp-Wallpaper-39.jpg");
     flex-direction: column;
+    overflow: auto;
 }
 .containerMessageMe{
     display:flex;
     justify-content: flex-end;
+    padding: 10px;
 }
 .messageMe{
     background-color: rgb(141, 238, 165);
@@ -121,37 +123,53 @@ h1 {
     flex-direction: column;
     width: auto;
     align-items: flex-end;
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid black;
     max-width: 50%;
 }
 .containerMessageOther{
     display:flex;
     justify-content: flex-start;
+    padding: 10px;
 }
 .messageOther{
     display: flex;
     width: auto;
     background-color: white;
     flex-direction: column;
+    padding: 10px;
+
+    border-radius: 20px;
+    border: 1px solid black;
     max-width: 50%;
 }
 .containerMessageUserConnected{
     display:flex;
     justify-content: center;
+    padding: 10px;
+
 }
 .messageUserConnected{
     display: flex;
     width: auto;
-    background-color: blue;
+    border-radius: 20px;
+    background-color: rgb(113, 196, 235);
     flex-direction: column;
+    padding: 10px;
     max-width: 50%;
 }
 .containerMessageUserDisconnected{
     display:flex;
     justify-content: center;
+    padding: 10px;
+
 }
 .messageUserDisconnected{
     display: flex;
     width: auto;
+    border-radius: 20px;
+    padding: 10px;
     background-color: tomato;
     flex-direction: column;
     max-width: 50%;
@@ -176,7 +194,7 @@ h1 {
 .sendButton {
     display: flex;
     flex:1;
-    background-color: goldenrod;
+    background-color: #3366FF;
     justify-content: center;
     align-items: center;
     font-size: 30px;
@@ -185,9 +203,10 @@ h1 {
 .user {
     display: flex;
     flex:1;
+    color: white;
     justify-content: center;
     align-items: center;
-    background-color: grey
+    background-color: #3366FF
 }
 .userZone {
     position: absolute;
@@ -289,7 +308,7 @@ h1 {
 .nameRooms{
     flex:1;
     display: flex;
-    background-color: pink;
+    background-color: #3366FF;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;

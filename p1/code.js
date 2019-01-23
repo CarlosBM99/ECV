@@ -196,7 +196,7 @@ server.on_user_connected = function (user_id) {
     //send the messages to the new user
     let message = { type: "allmessages", msg: messages[server.room.name], user: server.user_name }
     server.sendMessage(message, user_id)
-    bodyMessages.scrollTop = elem.scrollHeight
+    bodyMessages.scrollTop = bodyMessages.scrollHeight
 }
 server.on_user_disconnected = function (user_id) {
     checkServer()
@@ -217,7 +217,7 @@ server.on_user_disconnected = function (user_id) {
     var num = parseInt(numberusers.innerHTML) - 1
     numberusers.innerHTML = num
     // send the messages to the new user
-    bodyMessages.scrollTop = elem.scrollHeight
+    bodyMessages.scrollTop = bodyMessages.scrollHeight
 }
 
 function enterRoom(event) {
@@ -246,8 +246,8 @@ function recieveMessage(message) {
         containerMessageOther.appendChild(messageOther)
         bodyMessages.appendChild(containerMessageOther)
 
-        var elem = document.getElementById('messages');
-        elem.scrollTop = elem.scrollHeight
+        //var elem = document.getElementById('messages');
+        bodyMessages.scrollTop = bodyMessages.scrollHeight
         let roomname = server.room.name
         if (messages[roomname]) {
             messages[roomname].push(message)
@@ -288,8 +288,8 @@ function sendMessage(type, mes) {
             messages[roomname].push(JSON.stringify(message))
         }
         input.value = ''
-        var elem = document.getElementById('messages');
-        elem.scrollTop = elem.scrollHeight;
+        //var elem = document.getElementById('messages');
+        bodyMessages.scrollTop = bodyMessages.scrollHeight;
     }
     else {
         let message = { type: type, msg: mes, user: server.user_name }
