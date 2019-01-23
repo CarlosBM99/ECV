@@ -59,11 +59,16 @@ server.on_connect = function () {
 };
 
 var canvas = document.querySelector('#drawCanvas');
+var rect = canvas.parentNode.getBoundingClientRect();
 var ctx = canvas.getContext('2d');
 var color = document.querySelector(':checked').getAttribute('data-color');
 ctx.strokeStyle = color;
 ctx.lineWidth = '3';
 ctx.lineCap = ctx.lineJoin = 'round';
+console.log(rect.width)
+console.log(rect.height)
+//canvas.width = rect.width;
+//canvas.height = rect.height;
 
 document.getElementById('colorSwatch').addEventListener('click', function () {
     color = document.querySelector(':checked').getAttribute('data-color');

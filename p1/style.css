@@ -125,6 +125,7 @@ h1 {
     display:flex;
     justify-content: flex-end;
     padding: 10px;
+    min-height: 70px;
 }
 .messageMe{
     background-color: rgb(141, 238, 165);
@@ -141,6 +142,8 @@ h1 {
     display:flex;
     justify-content: flex-start;
     padding: 10px;
+    min-height: 70px;
+
 }
 .messageOther{
     display: flex;
@@ -157,7 +160,7 @@ h1 {
     display:flex;
     justify-content: center;
     padding: 10px;
-
+    min-height: 70px;
 }
 .messageUserConnected{
     display: flex;
@@ -172,7 +175,7 @@ h1 {
     display:flex;
     justify-content: center;
     padding: 10px;
-
+    min-height: 70px;
 }
 .messageUserDisconnected{
     display: flex;
@@ -330,19 +333,21 @@ canvas {
     border: black solid 1px;
 }
 .canvas {
-    width: 500px;
-    height: 400px;
+    display: flex;
+    background-color: white;
 }
 .canvasZone{
     display: block;
     width: 500px;
-    height: 400px;
+    height: 510px;
     flex-direction: column;
+    padding: 20px;
 }
 .bodyCanvas{
+    display: block;
     width: 500px;
-    height: 400px;
-    background-color: white
+    height: 510px;
+    background-color: white;
 }
 .toolsCanvas{
     display: flex;
