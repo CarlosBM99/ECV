@@ -1,5 +1,5 @@
 body {
-    background-image: url('https://i.imgur.com/R3cpQ9R.gif');
+    background-color: #19191e;
     background-size: cover;
     font-family: 'Raleway', sans-serif;
 }
@@ -11,9 +11,10 @@ h1 {
 }
 .h2 {
     text-align: left;
-    color: white;
+    color: rgb(248, 229, 229);
     text-shadow: 0 -1px 0 #fff, 0 1px 0 #2e2e2e, 0 2px 0 #2c2c2c, 0 3px 0 #2a2a2a, 0 4px 0 #282828, 0 5px 0 #262626, 0 6px 0 #242424, 0 7px 0 #222, 0 8px 0 #202020, 0 9px 0 #1e1e1e, 0 10px 0 #1c1c1c, 0 11px 0 #1a1a1a, 0 12px 0 #181818, 0 13px 0 #161616, 0 14px 0 #141414, 0 15px 0 #121212, 0 22px 30px rgba(0,0,0,0.9);
     font-size: 50px;
+    padding-left:20px 
 }
 .title {
     color: white;
@@ -26,8 +27,16 @@ h1 {
     flex-direction: column;
     display: flex;
     flex: 1;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center
+}
+.header {
+    display: flex;
+    flex: 1;
+}
+.content {
+    display: flex;
+    flex: 8;
 }
 .inputUsername {
     display: flex;
@@ -43,14 +52,80 @@ h1 {
     align-items: center;
     padding-left: 15px
 }
-.roomsZone {
-    position: absolute;
-    left: 10px;
-    top: 90px;
-    height: 500px;
-    width: 220px;
+.rooms {
+    display: flex;
+    flex: 5;
+    flex-direction: column
+}
+.room {
+    display: flex;
+    flex:1;
+    padding: 20px;
     background-color: white;
-    border-radius: 20px 20px 0px 0px;
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+.roomsZone {
+    display: flex;
+    flex:1;
+    flex-direction: column;
+    margin: 20px;
+    border: 3px solid white
+
+}
+.messagesZone {
+    display: flex;
+    flex:2.5;
+    flex-direction: column;
+}
+.headMessages {
+    display: flex;
+    flex:1;
+    flex-direction: row;
+}
+.roomName{
+    display: flex;
+    flex:3;
+    background-color: green;
+}
+.roomClients{
+    display: flex;
+    flex:1;
+    background-color: tomato;
+}
+.bodyMessages {
+    display: flex;
+    flex:5;
+    background-image: url("https://www.todoiphone.net/wp-content/uploads/2014/03/WhatsApp-Wallpaper-39.jpg");
+    flex-direction: column;
+}
+.inputMessages {
+    display: flex;
+    flex:0.8;
+    flex-direction: row
+}
+.inputText {
+    display: flex;
+    flex:5;
+    background-color: white;
+    font-size: 20px
+}
+.sendButton {
+    display: flex;
+    flex:1;
+    background-color: goldenrod;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    color: white
+}
+.user {
+    display: flex;
+    flex:1;
+    justify-content: center;
+    align-items: center;
+    background-color: grey
 }
 .userZone {
     position: absolute;
@@ -94,7 +169,8 @@ h1 {
     justify-content: center; 
     flex-direction: column; 
     align-content: center; 
-    margin: auto; 
+    margin-left: auto; 
+    margin-right: auto; 
     font-size: 20px    
 }
 .buttonEnter{
@@ -104,7 +180,8 @@ h1 {
     width: 150px; 
     height: 40px; 
     margin-bottom: 20px; 
-    margin: auto; 
+    margin-left: auto; 
+    margin-right: auto; 
     font-weight: 700
 }
 
@@ -123,8 +200,12 @@ h1 {
     left: 15px;
     top: 17px;
 }
-.inapp {
+/* .inapp {
     display: none;
+} */
+.cont{
+    flex:1;
+    background-color: red;
 }
 .container {
     position: absolute;
@@ -143,15 +224,35 @@ h1 {
     height: 600px;
     width: 220px;
 }
-.container_messages {
-    position: absolute;
-    left: 300px;
-    top: 80px;
-    height: 500px;
-    width: 600px;
-    background-color: white;
-    border-radius: 20px;
+.nameRooms{
+    flex:1;
+    display: flex;
+    background-color: pink;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 10px; 
+    padding-right: 10px; 
+
 }
+.canvasZone{
+    display: flex;
+    flex:2.5;
+    flex-direction: column;
+}
+.bodyCanvas{
+    display: flex;
+    flex:7;
+    background-color: white
+}
+.toolsCanvas{
+    display: flex;
+    flex:0.9;
+    background-color: grey;
+    justify-content: center;
+    align-items: center
+}
+
 .messages {
     border: 1px solid black;
     height: 500px;
@@ -185,10 +286,7 @@ h1 {
     width: 15%;
     border-radius: 0px 0px 25px 0px;
 }
-.room {
-    height: 25px;
-    width: 600px;
-}
+
 .nameroom {
     position: absolute;
     left: 15px;
@@ -220,9 +318,40 @@ canvas {
 }
 .canvas {
     display: flex;
-    flex-direction: column;
-    padding: 5px;
+    flex: 1
 }
+#colorSwatch {
+
+}
+input[type=radio] {
+	margin: 0;
+	display: none;
+	width: 0;
+}
+input[type=radio]:checked + label::after {
+	content: '\2712';
+	position: absolute;
+	left: 8px;
+}
+
+label {
+	display: inline-block; 
+	width: 48px; height: 48px; 
+	position: relative;
+	padding-right: 5px;
+	border-radius: 50%;
+	text-shadow: 1px 1px 2px #000;
+	color: #fff;
+	font-size: 32px;
+	line-height: 46px;
+}
+label[for=color01] {background: gold;}
+label[for=color02] {background: darkorange;}
+label[for=color03] {background: navy;}
+label[for=color04] {background: yellowgreen;}
+label[for=color05] {background: firebrick;}
+label[for=color06] {background: powderblue;}
+label[for=color07] { border: 1px solid black;}
 .eraser {
     background-image: url('eraser.png');
     background-size: cover;
@@ -271,7 +400,7 @@ select {
     select:focus {
         background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 0 29 14" width="29"><path fill="#9b4dca" d="M9.37727 3.625l5.08154 6.93523L19.54036 3.625"/></svg>');
     }
-label[for=color01] {
+/* label[for=color01] {
     background: gold;
 }
 label[for=color02] {
@@ -297,8 +426,8 @@ label[for=color06] {
 label[for=color07] {
     background: white;
     border: 1px black solid
-}
-label {
+} */
+/* label {
     display: inline-block;
     width: 25px;
     height: 25px;
@@ -309,4 +438,4 @@ label {
     color: #fff;
     font-size: 10px;
     line-height: 20px;
-}
+} */

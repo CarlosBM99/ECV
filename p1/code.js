@@ -1,4 +1,4 @@
-var sendButton = document.querySelector("#sendbutton")
+/* var sendButton = document.querySelector("#sendbutton")
 var input = document.querySelector("#inputme")
 var messages_container = document.querySelector("#messages")
 sendButton.addEventListener('click', function() {
@@ -301,4 +301,4 @@ function onKey(e, type) {
             loginCreate()
         }
     }
-} 
+}  */
