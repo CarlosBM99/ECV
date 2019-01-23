@@ -1,24 +1,18 @@
 var sendButton = document.querySelector(".sendButton")
 var input = document.querySelector(".inputText")
 var bodyMessages = document.querySelector(".bodyMessages")
+//function to send a message when click
 sendButton.addEventListener('click', function() {
     if(input.value !== ''){
         sendMessage()
     }
 })
-//var menu = document.querySelector('#menu')
 var inapp = document.querySelector('.content')
 var header = document.querySelector('.header')
-//var rooms = document.querySelector('#rooms')
-//var onroom = document.querySelector('#onroom')
 var refreshRooms = document.querySelector('.refreshRooms')
 refreshRooms.addEventListener('click', showRooms)
-
 function showRooms() {
-    console.log('YESO')
     checkServer()
-    // menu.style.display = menu.style.display === 'inline' ? 'none' : 'inline'
-    // onroom.style.display = onroom.style.display === 'none' ? 'inline' : 'none'
 }
 
 var server = new SillyClient();
@@ -34,6 +28,7 @@ logRoomName.addEventListener('keydown', function (e) {
 })
 var login = document.querySelector('.login')
 var user_name = ''
+//here we choose which server we want to connect
 function conncectToServer(roomName, userName) {
     server.connect("ecv-etic.upf.edu:9000", roomName);
     //server.connect("tamats.com:55000", roomName);
@@ -43,6 +38,7 @@ server.on_ready = function () {
     server.user_name = user_name
     server.clients[server.user_id].name = user_name
 }
+//function for the login
 function loginCreate() {
     if (logUserName.value !== '' && logRoomName.value !== '') {
         user_name = logUserName.value
@@ -53,11 +49,13 @@ function loginCreate() {
         login.style.display = 'none'
     }
 }
+//we are connecteds to the server
 server.on_connect = function () {
     console.log('Connected to Server!')
     checkServer()
 };
 
+//canvas variables
 var canvas = document.querySelector('#drawCanvas');
 var rect = canvas.parentNode.getBoundingClientRect();
 var ctx = canvas.getContext('2d');
@@ -67,9 +65,7 @@ ctx.lineWidth = '3';
 ctx.lineCap = ctx.lineJoin = 'round';
 console.log(rect.width)
 console.log(rect.height)
-//canvas.width = rect.width;
-//canvas.height = rect.height;
-
+//choose the color
 document.getElementById('colorSwatch').addEventListener('click', function () {
     color = document.querySelector(':checked').getAttribute('data-color');
 }, false);
@@ -97,6 +93,7 @@ function drawOnCanvas(color, plots) {
     }
     ctx.stroke();
 }
+//to know when are we drawing or not we created this two functions
 function startDraw(e) {
     isActive = true;
 }
@@ -107,7 +104,7 @@ function endDraw(e) {
     //empty the array
     plots = [];
 }
-
+//function to draw on the canvas
 function draw(e) {
     if (!isActive) return;
 
@@ -119,17 +116,17 @@ function draw(e) {
 
     drawOnCanvas(color, plots);
 }
+//load the draws on the canvas
 function drawFromStream(message) {
     if (!plots) return;
 
     ctx.beginPath();
     drawOnCanvas(message.color, message.plots);
 }
+//we add the messages to allmessages
 server.on_message = function (user_id, message) {
-    console.log('AAAAAA- All messages')
     if (JSON.parse(message).type === 'allmessages') {
         //delete previous messages from another room
-        console.log('AAAAAA- All messages')
         while (bodyMessages.firstChild) {
             bodyMessages.removeChild(bodyMessages.firstChild);
             ctx.fillStyle = "#fff";
@@ -154,6 +151,7 @@ function checkRoomInfo() {
         clients.innerText = info.clients.length
     };
 }
+//refresh the information of the server
 function checkServer() {
     server.getReport(function (report) {
         var checkListrooms = document.querySelector('#listrooms')
@@ -185,6 +183,7 @@ function checkServer() {
         rooms.appendChild(listrooms)
     })
 }
+//steps that must be done when someone join the chat
 server.on_user_connected = function (user_id) {
     checkServer()
     checkRoomInfo()
@@ -203,14 +202,10 @@ server.on_user_connected = function (user_id) {
     server.sendMessage(message, user_id)
     bodyMessages.scrollTop = bodyMessages.scrollHeight
 }
+//steps that must be done when someone left the chat
 server.on_user_disconnected = function (user_id) {
     checkServer()
     checkRoomInfo()
-    //var user_con = document.createElement('div')
-    //var user_con2 = document.createElement('div')
-    //user_con2.className = 'userDisconnected'
-    //user_con2.innerHTML = 'User disconnected: ' + 'user_' + user_id + '!!'
-    //user_con.appendChild(user_con2)
     var containerMessageUserDisconnected = document.createElement('div')
     containerMessageUserDisconnected.className ='containerMessageUserDisconnected'
     var messageUserDisconnected = document.createElement('div')
@@ -232,7 +227,7 @@ function enterRoom(event) {
         conncectToServer(name)
     }
 }
-
+//steps that must be done when someone receive a message
 function recieveMessage(message) {
     if (JSON.parse(message).type !== 'canvas') {
         var bodyMessages = document.querySelector('.bodyMessages');
@@ -265,7 +260,7 @@ function recieveMessage(message) {
     }
 
 }
-
+//steps that must be done when someone send a message
 function sendMessage(type, mes) {
     if (type !== 'canvas') {
         var bodyMessages = document.querySelector('.bodyMessages');
@@ -304,7 +299,7 @@ function sendMessage(type, mes) {
 input.addEventListener('keydown', function (e) {
     onKey(e, 'inputme')
 })
-
+//enter will log us in and send messages
 function onKey(e, type) {
     //Enter Key
     if (e.which == 13) {
