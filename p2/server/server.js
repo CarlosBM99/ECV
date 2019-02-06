@@ -14,6 +14,15 @@ server.listen(port, function() {
 	console.log(`Server ready on port ${port}!`);
 });
 
+// Express
+const express = require("express");
+const app = express()
+app.get('/', (req, res) => {
+    res.send('Hello World')
+    console.log('nice')
+})
+app.listen(port+1, () => console.log(`Example app listening on port ${port+1}!`))
+
 // WebSocket Server
 var WebSocketServer = require('websocket').server;
 var wsServer = new WebSocketServer({ // create the server
