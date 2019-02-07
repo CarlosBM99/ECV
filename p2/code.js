@@ -1,11 +1,11 @@
-var enterButton = document.querySelector(".buttonEnter")
+/* var enterButton = document.querySelector(".buttonEnter")
 enterButton.addEventListener('click', function(){
     enterChat()
 })
 var inputUserName = document.querySelector(".logUserName")
 inputUserName.addEventListener('keydown', function(e){
     onKey(e, 'username')
-})
+}) */
 function onKey(e, type){
     if(e.which === 13){
         if(type === 'username'){
