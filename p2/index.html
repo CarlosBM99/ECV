@@ -1,11 +1,12 @@
 <div class="mainContainer">
     <title>Chat App</title>
     <link type="text/css" rel="stylesheet" media="all" href="style.css" />
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
-        crossorigin="anonymous">
-    <!-- <div id="login" class="login">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+        integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+    <!-- Add Login -->
+    <div id="login" class="login">
         <h1>Chat App</h1>
         <div class="inputUsername">
             <div class="insideUsernameBubble">
@@ -18,20 +19,38 @@
                 Enter
             </div>
         </div>
-    </div> -->
+    </div>
     <!-- Add chat and room -->
-    <div>
-        <div style="background-color: tomato ;display: inline-block; width: 49%;
-        height: 100%;
-        border: 1px solid blue;">
-            A
+    <div class="room" style="display: none; flex: 1; min-height: 400px;">
+        <div style="flex:3; display: flex;background-color: grey; min-width: 600px; margin: 30px; border-radius: 20px;">
+            Aa
         </div>
-        <div style="background-color: tomato ;display: inline-block; width: 49%;
-        height: 100%;
-        border: 1px solid blue;">
-            B
+        <div class="messagesZone">
+            <div class="headMessages">
+                <div class="roomName">Username: </div>
+                <div class="roomClients">
+                    <div class="numberRoomClients">1</div>
+                    <i class="fa fa-user-circle avatar"></i>
+                </div>
+            </div>
+            <div class="bodyMessages">
+            </div>
+            <div class="inputMessages">
+                <input class="inputText">
+                <button class="sendButton">Send</button>
+            </div>
         </div>
-
+        <!-- <div style="flex:1; display: flex; background-color: tomato; flex-direction: column; min-width: 300px; margin: 30px">
+            <div style="flex:8; background-color: grey">
+                bb
+            </div>
+            <div style="flex:1;display: flex; background-color: red; min-height: 80px">
+                <input class="inputSendMessage" style="flex:3; background-color: blueviolet">
+                <button style="flex:1; background-color: green">
+                        Send
+                </button>
+            </div>
+        </div> -->
     </div>
     <!-- <div class="header">
         <div class="h2">
@@ -83,7 +102,6 @@
             </section>
         </div>
     </div> -->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script type="text/javascript" src="sillyclient.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> -->
     <script type="text/javascript" src="code.js"></script>
 </div>

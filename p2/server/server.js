@@ -1,6 +1,8 @@
 // Variables
 var users = [];
 var uid = 0;
+var messages = [];
+var msg = {}
 // Http Server
 var http = require('http');
 var url = require('url');
@@ -25,7 +27,6 @@ app.get('/', (req, res) => {
     console.log('nice')
 })
 app.listen(port + 1, () => console.log(`Example app listening on port ${port + 1}!`))
-
 // WebSocket Server
 var WebSocketServer = require('websocket').server;
 var wsServer = new WebSocketServer({ // create the server
@@ -35,18 +36,64 @@ wsServer.on('request', function (request) {
     var connection = request.accept(null, request.origin);
     var user = {}
     console.log("NEW WEBSOCKET USER!!!");
-    console.log('CONNECTION-INFO:', request.resourceURL.query)
     user = request.resourceURL.query
     user.uid = uid
-    console.log(user)
+    user.connection = connection
+    users.push(user)
     uid++
-    connection.on('message', function (message) {
-        if (message.type === 'utf8') {
-            console.log("NEW MSG: " + message.utf8Data); // process WebSocket message
+    msg = {
+        type: 'username',
+        info: {
+            name: user.name,
+            uid: user.uid
+        }
+    }
+    connection.send(JSON.stringify(msg))
+    msg = {
+        type: 'messages',
+        info: messages
+    }
+    connection.send(JSON.stringify(msg))
+
+    connection.on('message', function (data) {
+        if (data.type === 'utf8') {
+            var message = JSON.parse(data.utf8Data)
+            switch (message.type) {
+                case "login":
+                    msg = {
+                        type: 'clients',
+                        info: users.length
+                    }
+                    sendAll(JSON.stringify(msg));
+                    break;
+                case "message":
+                    messages.push(message)
+                    msg = {
+                        type: 'message',
+                        info: message
+                    }
+                    sendAll(JSON.stringify(msg));
+                    //console.log(messages)
+                    break;
+            }
         }
     });
 
     connection.on('close', function (connection) {
-        console.log("USER IS GONE");// close user connection
+        console.log("USER " + user.name +" IS GONE");// close user connection
+        users = users.filter(function( obj ) {
+            return obj.name !== user.name;
+        });
+        msg = {
+            type: 'clients',
+            info: users.length
+        }
+        sendAll(JSON.stringify(msg));
     });
 });
+
+function sendAll(msg){
+    for(var i = 0; i < users.length; i++){
+        users[i].connection.send(msg)
+    }               
+}
