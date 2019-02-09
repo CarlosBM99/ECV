@@ -83,7 +83,6 @@ h1 {
 }
 .messagesZone {
     display: flex;
-    flex:1;
     flex-direction: column;
     padding: 40px;
 }

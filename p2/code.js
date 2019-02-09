@@ -1,31 +1,71 @@
+// Fill canvas
+var x = 95; y = 50;
+var canvas = document.querySelector("#drawCanvas");
+var ctx = canvas.getContext("2d");
+ctx.beginPath();
+ctx.arc(x, y, 40, 0, 2 * Math.PI);
+ctx.stroke();
+
+canvas.addEventListener("mousedown", function (e) {
+    getMousePos(canvas, e)
+}, false);
+
+function getMousePos(canvas, evt) {
+    var rect = canvas.getBoundingClientRect(), // abs. size of element
+        scaleX = canvas.width / rect.width,    // relationship bitmap vs. element for X
+        scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for Y
+    toX = (evt.clientX - rect.left) * scaleX;
+    toY = (evt.clientY - rect.top) * scaleY;
+    ctx.beginPath();
+    ctx.arc(toX, toY, 40, 0, 2 * Math.PI);
+    ctx.stroke();
+
+    /* return {
+        x: (evt.clientX - rect.left) * scaleX,   // scale mouse coordinates after they have
+        y: (evt.clientY - rect.top) * scaleY     // been adjusted to be relative to element
+    } */
+}
+/* function draw(toX,toY) {
+    ctx.beginPath();
+    ctx.arc(x, y, 20, 0, 2 * Math.PI);
+    ctx.fillStyle = 'rgba(250,0,0,0.4)';
+    ctx.fill();
+
+    x += 2;
+    ctx.fillStyle = "rgba(34,45,23,0.4)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    requestAnimationFrame(draw);
+    //ctx.clearRect(0,0,can.width,can.height);
+} */
+
 var enterButton = document.querySelector(".buttonEnter")
-enterButton.addEventListener('click', function(){
+enterButton.addEventListener('click', function () {
     enterChat()
 })
 var inputUserName = document.querySelector(".logUserName")
-inputUserName.addEventListener('keydown', function(e){
+inputUserName.addEventListener('keydown', function (e) {
     onKey(e, 'username')
 })
 var inputSendMessage = document.querySelector('.inputText')
-inputSendMessage.addEventListener('keydown', function(e){
+inputSendMessage.addEventListener('keydown', function (e) {
     onKey(e, 'sendmessage')
 })
 var username = document.querySelector('.roomName')
 var infoUsername = null;
-function onKey(e, type){
-    if(e.which === 13){
-        if(type === 'username'){
-            if(inputUserName.value !== ''){
+function onKey(e, type) {
+    if (e.which === 13) {
+        if (type === 'username') {
+            if (inputUserName.value !== '') {
                 enterChat()
             }
-        } else if(type === 'sendmessage'){
-            if(inputSendMessage.value !== ''){
+        } else if (type === 'sendmessage') {
+            if (inputSendMessage.value !== '') {
                 sendMessage()
             }
         }
     }
 }
-function sendMessage(){
+function sendMessage() {
     console.log('Message SEND')
     var msg = {
         type: "message",
@@ -33,7 +73,7 @@ function sendMessage(){
         date: Date.now(),
         uid: infoUsername.uid,
         name: infoUsername.name
-    };    
+    };
     socket.send(JSON.stringify(msg))
 
     var bodyMessages = document.querySelector('.bodyMessages');
@@ -57,8 +97,8 @@ function sendMessage(){
 
     inputSendMessage.value = ''
 }
-function recieveMessage(message,type) {
-    if(type === 'userconnected'){
+function recieveMessage(message, type) {
+    if (type === 'userconnected') {
         console.log('message', message)
         var bodyMessages = document.querySelector('.bodyMessages');
         var containerMessageUserConnected = document.createElement('div')
@@ -69,12 +109,12 @@ function recieveMessage(message,type) {
         containerMessageUserConnected.appendChild(messageUserConnected)
         bodyMessages.appendChild(containerMessageUserConnected)
         bodyMessages.scrollTop = bodyMessages.scrollHeight
-    } else if(type === 'userdisconnected'){
+    } else if (type === 'userdisconnected') {
         var bodyMessages = document.querySelector('.bodyMessages');
         var containerMessageUserDisconnected = document.createElement('div')
-        containerMessageUserDisconnected.className ='containerMessageUserDisconnected'
+        containerMessageUserDisconnected.className = 'containerMessageUserDisconnected'
         var messageUserDisconnected = document.createElement('div')
-        messageUserDisconnected.className ='messageUserDisconnected'
+        messageUserDisconnected.className = 'messageUserDisconnected'
         messageUserDisconnected.innerHTML = 'User disconnected!!'
         containerMessageUserDisconnected.appendChild(messageUserDisconnected)
         bodyMessages.appendChild(containerMessageUserDisconnected)
@@ -98,12 +138,12 @@ function recieveMessage(message,type) {
         bodyMessages.appendChild(containerMessageOther)
         bodyMessages.scrollTop = bodyMessages.scrollHeight
     }
-    
+
 }
 var socket = null
-function enterChat(){
+function enterChat() {
     socket = new WebSocket("ws://" + 'localhost:1337/?name=' + inputUserName.value)
-    socket.onopen = function() {
+    socket.onopen = function () {
         console.log("Socket has been opened :D")
         var msg = {
             type: 'login',
@@ -115,13 +155,13 @@ function enterChat(){
         var enterRoom = document.querySelector('.room')
         enterRoom.style.display = 'flex'
     }
-    socket.addEventListener('close', function(e){
+    socket.addEventListener('close', function (e) {
         console.log("Socket has been closed: ", e)
     })
-    socket.onmessage = function(msg){
+    socket.onmessage = function (msg) {
         //console.log("Received: " + msg.data)
         var message = JSON.parse(msg.data)
-        switch(message.type){
+        switch (message.type) {
             case "username":
                 infoUsername = message.info
                 console.log(infoUsername.name)
@@ -134,30 +174,30 @@ function enterChat(){
                 numberRoomClients.innerHTML = info
                 break;
             case "message":
-                if(message.info.uid !== infoUsername.uid){
+                if (message.info.uid !== infoUsername.uid) {
                     recieveMessage(message.info)
                 }
                 break;
             case "messages":
-                for(var i = 0; i<message.info.length; i++){
+                for (var i = 0; i < message.info.length; i++) {
                     recieveMessage(message.info[i])
                 }
                 break;
             case "userconnected":
-                if(message.info.uid !== infoUsername.uid){
-                    recieveMessage(message.info[i],message.type)
+                if (message.info.uid !== infoUsername.uid) {
+                    recieveMessage(message.info[i], message.type)
                 }
                 break;
             case "userdisconnected":
-                if(message.info.uid !== infoUsername.uid){
-                    recieveMessage(message.info[i],message.type)
+                if (message.info.uid !== infoUsername.uid) {
+                    recieveMessage(message.info[i], message.type)
                 }
                 break;
         }
 
-        
+
     }
-    socket.onerror = function (err){
+    socket.onerror = function (err) {
         console.log("error: ", err)
     }
 }
