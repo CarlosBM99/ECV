@@ -57,24 +57,48 @@ function sendMessage(){
 
     inputSendMessage.value = ''
 }
-function recieveMessage(message) {
-    console.log('MessageRecived: ', message.uid)
-    var bodyMessages = document.querySelector('.bodyMessages');
-    var containerMessageOther = document.createElement('div');
-    containerMessageOther.className = 'containerMessageOther'
-    var messageOther = document.createElement('div');
-    messageOther.className = 'messageOther'
-    var userMessageOther = document.createElement('div');
-    userMessageOther.className = 'userMessageOther'
-    userMessageOther.innerHTML = message.name
-    var messageTextOther = document.createElement('div');
-    messageTextOther.className = 'messageTextOther'
-    messageTextOther.innerHTML = message.text
-    messageOther.appendChild(userMessageOther)
-    messageOther.appendChild(messageTextOther)
-    containerMessageOther.appendChild(messageOther)
-    bodyMessages.appendChild(containerMessageOther)
-    bodyMessages.scrollTop = bodyMessages.scrollHeight
+function recieveMessage(message,type) {
+    if(type === 'userconnected'){
+        console.log('message', message)
+        var bodyMessages = document.querySelector('.bodyMessages');
+        var containerMessageUserConnected = document.createElement('div')
+        containerMessageUserConnected.className = 'containerMessageUserConnected'
+        var messageUserConnected = document.createElement('div')
+        messageUserConnected.className = 'messageUserConnected'
+        messageUserConnected.innerHTML = 'User connected!!'
+        containerMessageUserConnected.appendChild(messageUserConnected)
+        bodyMessages.appendChild(containerMessageUserConnected)
+        bodyMessages.scrollTop = bodyMessages.scrollHeight
+    } else if(type === 'userdisconnected'){
+        var bodyMessages = document.querySelector('.bodyMessages');
+        var containerMessageUserDisconnected = document.createElement('div')
+        containerMessageUserDisconnected.className ='containerMessageUserDisconnected'
+        var messageUserDisconnected = document.createElement('div')
+        messageUserDisconnected.className ='messageUserDisconnected'
+        messageUserDisconnected.innerHTML = 'User disconnected!!'
+        containerMessageUserDisconnected.appendChild(messageUserDisconnected)
+        bodyMessages.appendChild(containerMessageUserDisconnected)
+        bodyMessages.scrollTop = bodyMessages.scrollHeight
+    } else {
+        console.log('MessageRecived: ', message)
+        var bodyMessages = document.querySelector('.bodyMessages');
+        var containerMessageOther = document.createElement('div');
+        containerMessageOther.className = 'containerMessageOther'
+        var messageOther = document.createElement('div');
+        messageOther.className = 'messageOther'
+        var userMessageOther = document.createElement('div');
+        userMessageOther.className = 'userMessageOther'
+        userMessageOther.innerHTML = message.name
+        var messageTextOther = document.createElement('div');
+        messageTextOther.className = 'messageTextOther'
+        messageTextOther.innerHTML = message.text
+        messageOther.appendChild(userMessageOther)
+        messageOther.appendChild(messageTextOther)
+        containerMessageOther.appendChild(messageOther)
+        bodyMessages.appendChild(containerMessageOther)
+        bodyMessages.scrollTop = bodyMessages.scrollHeight
+    }
+    
 }
 var socket = null
 function enterChat(){
@@ -115,9 +139,18 @@ function enterChat(){
                 }
                 break;
             case "messages":
-                //console.log(message)
                 for(var i = 0; i<message.info.length; i++){
                     recieveMessage(message.info[i])
+                }
+                break;
+            case "userconnected":
+                if(message.info.uid !== infoUsername.uid){
+                    recieveMessage(message.info[i],message.type)
+                }
+                break;
+            case "userdisconnected":
+                if(message.info.uid !== infoUsername.uid){
+                    recieveMessage(message.info[i],message.type)
                 }
                 break;
         }

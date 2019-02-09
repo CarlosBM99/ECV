@@ -41,6 +41,8 @@ wsServer.on('request', function (request) {
     user.connection = connection
     users.push(user)
     uid++
+
+    // Send user information
     msg = {
         type: 'username',
         info: {
@@ -49,11 +51,23 @@ wsServer.on('request', function (request) {
         }
     }
     connection.send(JSON.stringify(msg))
+
+    // Send all messages
     msg = {
         type: 'messages',
         info: messages
     }
     connection.send(JSON.stringify(msg))
+
+    // Send message user connected do other all
+    msg = {
+        type: 'userconnected',
+        info: {
+            name: user.name,
+            uid: user.uid
+        }
+    }
+    sendAll(JSON.stringify(msg))
 
     connection.on('message', function (data) {
         if (data.type === 'utf8') {
@@ -73,7 +87,6 @@ wsServer.on('request', function (request) {
                         info: message
                     }
                     sendAll(JSON.stringify(msg));
-                    //console.log(messages)
                     break;
             }
         }
@@ -88,7 +101,15 @@ wsServer.on('request', function (request) {
             type: 'clients',
             info: users.length
         }
-        sendAll(JSON.stringify(msg));
+        sendAll(JSON.stringify(msg))
+        msg = {
+            type: 'userdisconnected',
+            info: {
+                name: user.name,
+                uid: user.uid
+            }
+        }
+        sendAll(JSON.stringify(msg))
     });
 });
 
