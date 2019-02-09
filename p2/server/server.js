@@ -2,6 +2,7 @@
 var users = [];
 var uid = 0;
 var messages = [];
+var draws = [];
 var msg = {}
 // Http Server
 var http = require('http');
@@ -68,7 +69,13 @@ wsServer.on('request', function (request) {
         }
     }
     sendAll(JSON.stringify(msg))
-
+    msg = {
+        type: 'draws',
+        draws: draws
+    }
+    console.log('sending messages to the client from server')
+    connection.send(JSON.stringify(msg))
+    
     connection.on('message', function (data) {
         if (data.type === 'utf8') {
             var message = JSON.parse(data.utf8Data)
@@ -87,6 +94,24 @@ wsServer.on('request', function (request) {
                         info: message
                     }
                     sendAll(JSON.stringify(msg));
+                    break;
+                case "canvas":
+                    message.info = {
+                        name: user.name,
+                        uid: user.uid
+                    }
+                    console.log('sending message to client: ', message)
+                    var v = 0;
+                    for(var i = 0; i<draws.length; i++){
+                        if(draws[i].info.uid === message.info.uid){
+                            draws[i] = message
+                            v = 1;
+                        }
+                    }
+                    if(v === 0){
+                        draws.push(message)
+                    }
+                    sendAll(JSON.stringify(message))
                     break;
             }
         }

@@ -1,42 +1,44 @@
+var colors = ["blue", "yellow", "pink", "green"]
+var draws = []
 // Fill canvas
 var x = 95; y = 50;
 var canvas = document.querySelector("#drawCanvas");
 var ctx = canvas.getContext("2d");
-ctx.beginPath();
-ctx.arc(x, y, 40, 0, 2 * Math.PI);
-ctx.stroke();
+var color = colors[Math.floor(Math.random() * colors.length)]
+draw(x, y, color)
+var aux1 = null;
+var aux2 = null;
 
 canvas.addEventListener("mousedown", function (e) {
     getMousePos(canvas, e)
 }, false);
 
+function draw(x, y, color_fill) {
+    ctx.fillStyle = color_fill;
+    ctx.beginPath();
+    ctx.arc(x, y, 40, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.stroke();
+}
 function getMousePos(canvas, evt) {
     var rect = canvas.getBoundingClientRect(), // abs. size of element
         scaleX = canvas.width / rect.width,    // relationship bitmap vs. element for X
         scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for Y
     toX = (evt.clientX - rect.left) * scaleX;
     toY = (evt.clientY - rect.top) * scaleY;
-    ctx.beginPath();
-    ctx.arc(toX, toY, 40, 0, 2 * Math.PI);
-    ctx.stroke();
-
-    /* return {
-        x: (evt.clientX - rect.left) * scaleX,   // scale mouse coordinates after they have
-        y: (evt.clientY - rect.top) * scaleY     // been adjusted to be relative to element
-    } */
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (var i = 0; i < draws.length; i++) {
+        draw(draws[i].x, draws[i].y, draws[i].color)
+    }
+    draw(toX, toY, color)
+    msg = {
+        type: 'canvas',
+        x: toX,
+        y: toY,
+        color: color
+    }
+    socket.send(JSON.stringify(msg))
 }
-/* function draw(toX,toY) {
-    ctx.beginPath();
-    ctx.arc(x, y, 20, 0, 2 * Math.PI);
-    ctx.fillStyle = 'rgba(250,0,0,0.4)';
-    ctx.fill();
-
-    x += 2;
-    ctx.fillStyle = "rgba(34,45,23,0.4)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    requestAnimationFrame(draw);
-    //ctx.clearRect(0,0,can.width,can.height);
-} */
 
 var enterButton = document.querySelector(".buttonEnter")
 enterButton.addEventListener('click', function () {
@@ -98,8 +100,22 @@ function sendMessage() {
     inputSendMessage.value = ''
 }
 function recieveMessage(message, type) {
-    if (type === 'userconnected') {
-        console.log('message', message)
+    if (type === 'canvas') {
+        console.log('Draw canvas', message)
+        var v = 0;
+        for(var i = 0; i< draws.length; i++){
+            if(draws[i].info.uid === message.info.uid){
+                draws[i] = message
+                v = 1
+            }
+        }
+        if( v === 0){
+            draws.push(message)
+        }
+        draw(message.x, message.y, message.color)
+    }
+    else if (type === 'userconnected') {
+        console.log('USER CONNECTED: ', message)
         var bodyMessages = document.querySelector('.bodyMessages');
         var containerMessageUserConnected = document.createElement('div')
         containerMessageUserConnected.className = 'containerMessageUserConnected'
@@ -141,15 +157,25 @@ function recieveMessage(message, type) {
 
 }
 var socket = null
+var msg = {}
 function enterChat() {
     socket = new WebSocket("ws://" + 'localhost:1337/?name=' + inputUserName.value)
     socket.onopen = function () {
         console.log("Socket has been opened :D")
-        var msg = {
+        msg = {
             type: 'login',
             text: 'Hello server'
         }
         this.send(JSON.stringify(msg))
+        msg = {
+            type: 'canvas',
+            x: x,
+            y: y,
+            color: color
+        }
+        console.log('Message canvas sended!')
+        this.send(JSON.stringify(msg))
+
         var login = document.querySelector('.login')
         login.style.display = 'none'
         var enterRoom = document.querySelector('.room')
@@ -164,13 +190,12 @@ function enterChat() {
         switch (message.type) {
             case "username":
                 infoUsername = message.info
-                console.log(infoUsername.name)
+                console.log('USERNAME:', infoUsername.name)
                 username.innerHTML = username.innerHTML + ' ' + infoUsername.name
                 break;
             case "clients":
                 var numberRoomClients = document.querySelector('.numberRoomClients')
                 var info = message.info
-                console.log(info)
                 numberRoomClients.innerHTML = info
                 break;
             case "message":
@@ -185,13 +210,26 @@ function enterChat() {
                 break;
             case "userconnected":
                 if (message.info.uid !== infoUsername.uid) {
-                    recieveMessage(message.info[i], message.type)
+                    recieveMessage(message, message.type)
                 }
                 break;
             case "userdisconnected":
                 if (message.info.uid !== infoUsername.uid) {
-                    recieveMessage(message.info[i], message.type)
+                    recieveMessage(message, message.type)
                 }
+                break;
+            case "canvas":
+                console.log('Message canvas recived!! ', message)
+                if (message.info.uid !== infoUsername.uid) {
+                    recieveMessage(message, message.type)
+                }
+                break;
+            case "draws":
+                //if (message.info.uid !== infoUsername.uid) {
+                for(var i = 0; i< message.draws.length; i++){
+                    recieveMessage(message.draws[i], message.draws[i].type)
+                }
+                //}
                 break;
         }
 
