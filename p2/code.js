@@ -27,9 +27,9 @@ function getMousePos(canvas, evt) {
     toX = (evt.clientX - rect.left) * scaleX;
     toY = (evt.clientY - rect.top) * scaleY;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (var i = 0; i < draws.length; i++) {
+    /* for (var i = 0; i < draws.length; i++) {
         draw(draws[i].x, draws[i].y, draws[i].color)
-    }
+    } */
     draw(toX, toY, color)
     msg = {
         type: 'canvas',
@@ -102,16 +102,6 @@ function sendMessage() {
 function recieveMessage(message, type) {
     if (type === 'canvas') {
         console.log('Draw canvas', message)
-        var v = 0;
-        for(var i = 0; i< draws.length; i++){
-            if(draws[i].info.uid === message.info.uid){
-                draws[i] = message
-                v = 1
-            }
-        }
-        if( v === 0){
-            draws.push(message)
-        }
         draw(message.x, message.y, message.color)
     }
     else if (type === 'userconnected') {
@@ -218,18 +208,12 @@ function enterChat() {
                     recieveMessage(message, message.type)
                 }
                 break;
-            case "canvas":
-                console.log('Message canvas recived!! ', message)
-                if (message.info.uid !== infoUsername.uid) {
-                    recieveMessage(message, message.type)
-                }
-                break;
             case "draws":
-                //if (message.info.uid !== infoUsername.uid) {
+                draws = message.draws
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
                 for(var i = 0; i< message.draws.length; i++){
                     recieveMessage(message.draws[i], message.draws[i].type)
                 }
-                //}
                 break;
         }
 

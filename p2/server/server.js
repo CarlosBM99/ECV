@@ -74,7 +74,7 @@ wsServer.on('request', function (request) {
         draws: draws
     }
     console.log('sending messages to the client from server')
-    connection.send(JSON.stringify(msg))
+    sendAll(JSON.stringify(msg))
     
     connection.on('message', function (data) {
         if (data.type === 'utf8') {
@@ -106,12 +106,17 @@ wsServer.on('request', function (request) {
                         if(draws[i].info.uid === message.info.uid){
                             draws[i] = message
                             v = 1;
+                            console.log('IIIIIINNNNNNNs')
                         }
                     }
                     if(v === 0){
                         draws.push(message)
                     }
-                    sendAll(JSON.stringify(message))
+                    msg = {
+                        type: 'draws',
+                        draws: draws
+                    }
+                    sendAll(JSON.stringify(msg))
                     break;
             }
         }
