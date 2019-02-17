@@ -60,7 +60,7 @@ wsServer.on('request', function (request) {
     }
     connection.send(JSON.stringify(msg))
 
-    // Send message user connected do other all
+    // Send message user connected to other all
     msg = {
         type: 'userconnected',
         info: {
@@ -95,6 +95,31 @@ wsServer.on('request', function (request) {
                     }
                     sendAll(JSON.stringify(msg));
                     break;
+                case "scene":
+                    console.log('MHA ENTRAT UNA SCENE')
+                    message.info = {
+                        name: user.name,
+                        uid: user.uid
+                    }
+                    //Veure si es nou o ja estava a la sala
+                    var v = 0;
+                    for (var i = 0; i < draws.length; i++) {
+                        if (draws[i].info.uid === message.info.uid) {
+                            draws[i] = message
+                            v = 1;
+                            console.log('')
+                        }
+                    }
+                    if (v === 0) {
+                        draws.push(message)
+                    }
+                    //Send the array with all the users and their positions
+                    msg = {
+                        type: 'scene',
+                        draws: draws
+                    }
+                    sendAll(JSON.stringify(msg));
+                    break
                 case "canvas":
                     message.info = {
                         name: user.name,

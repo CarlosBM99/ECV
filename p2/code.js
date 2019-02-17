@@ -1,57 +1,229 @@
 var colors = ["blue", "yellow", "pink", "green"]
 var draws = []
+
+
+//Scene
+var scene, camera, renderer, mesh;
+var meshFloor;
+var keyboard = {};
+var player = { height: 1.8, speed: 0.2, turnSpeed: Math.PI * 0.02 };
+var USE_WIREFRAME = false;
+var myX, myY, myZ;
+scene = new THREE.Scene();
+camera = new THREE.PerspectiveCamera(100, 1280 / 720, 0.1, 500);
+
 // Fill canvas
-var x = 95; y = 50;
-var canvas = document.querySelector("#drawCanvas");
-var ctx = canvas.getContext("2d");
-var color = colors[Math.floor(Math.random() * colors.length)]
-draw(x, y, color)
-var aux1 = null;
-var aux2 = null;
+//var x = 95; y = 50;
+//var canvas = document.querySelector("#drawCanvas");
+//var ctx = canvas.getContext("2d");
+//var color = colors[Math.floor(Math.random() * colors.length)]
+////var color = "white"
+//drawCircle(x, y, color)
 
-canvas.addEventListener("mousedown", function (e) {
-    getMousePos(canvas, e)
-}, false);
+//Scene functions
 
-function draw(x, y, color_fill) {
-    ctx.fillStyle = color_fill;
-    ctx.beginPath();
-    ctx.arc(x, y, 40, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.stroke();
+function init() {
+    mesh = new THREE.Mesh(
+        new THREE.BoxGeometry(1, 1, 1),
+        new THREE.MeshPhongMaterial({ color: 0xff4444, wireframe: USE_WIREFRAME })
+    );
+    //Set position to 1 in order to not be inside the plane
+    myX = mesh.position.x;
+    myY = mesh.position.y += 1;
+    myZ = mesh.position.z;
+    // The cube can have shadows cast onto it, and it can cast shadows
+    mesh.receiveShadow = true;
+    mesh.castShadow = true;
+    scene.add(mesh);
+
+    meshFloor = new THREE.Mesh(
+        new THREE.PlaneGeometry(50, 50, 50, 50),
+        // MeshBasicMaterial does not react to lighting, so we replace with MeshPhongMaterial
+        new THREE.MeshPhongMaterial({ color: 0xffffff, wireframe: USE_WIREFRAME })
+    );
+    //Set the floor as floor
+    meshFloor.rotation.x -= Math.PI / 2;
+    // Floor can have shadows cast onto it
+    meshFloor.receiveShadow = true;
+    scene.add(meshFloor);
+    // LIGHTS
+    ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+    scene.add(ambientLight);
+
+    light = new THREE.PointLight(0xffffff, 0.8, 18);
+    light.position.set(-3, 6, -3);
+    light.castShadow = true;
+
+    // Will not light anything closer than 0.1 units or further than 25 units
+    light.shadow.camera.near = 0.1;
+    light.shadow.camera.far = 25;
+    scene.add(light);
+
+    camera.position.set(0, player.height, -5);
+    camera.lookAt(new THREE.Vector3(0, player.height, 0));
+
+    renderer = new THREE.WebGLRenderer();
+    renderer.setSize(1280, 720);
+    // Enable Shadows in the Renderer
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.BasicShadowMap;
+
+    var c = document.querySelector(".room")
+    c.insertBefore(renderer.domElement, c.firstChild);
+
+    animate();
 }
-function getMousePos(canvas, evt) {
-    var rect = canvas.getBoundingClientRect(), // abs. size of element
-        scaleX = canvas.width / rect.width,    // relationship bitmap vs. element for X
-        scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for Y
-    toX = (evt.clientX - rect.left) * scaleX;
-    toY = (evt.clientY - rect.top) * scaleY;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    /* for (var i = 0; i < draws.length; i++) {
-        draw(draws[i].x, draws[i].y, draws[i].color)
-    } */
-    draw(toX, toY, color)
-    msg = {
-        type: 'canvas',
-        x: toX,
-        y: toY,
-        color: color
+function moveCube(x,y,z) {
+    mesh = new THREE.Mesh(
+        new THREE.BoxGeometry(1, 1, 1),
+        new THREE.MeshPhongMaterial({ color: 0x444444, wireframe: USE_WIREFRAME })
+    );
+    //Set position to 1 in order to not be inside the plane
+    mesh.position.x = x;
+    mesh.position.y = y;
+    mesh.position.z = z;
+    // The cube can have shadows cast onto it, and it can cast shadows
+    mesh.receiveShadow = true;
+    mesh.castShadow = true;
+    scene.add(mesh);
+    
+}
+function animate() {
+    //Function performed several times per second
+    requestAnimationFrame(animate);
+
+    //Give the cube some movement
+    //mesh.rotation.x += 0.01;
+    //mesh.rotation.y += 0.02;
+
+    // Keyboard movement inputs
+    if (keyboard[87]) { // W key
+        myZ = mesh.position.z + 0.1
+        mesh.position.set(myX, myY, myZ)
+        var msg = {
+            type: 'scene',
+            x: myX,
+            y: myY,
+            z: myZ
+        }
+        socket.send(JSON.stringify(msg))
     }
-    socket.send(JSON.stringify(msg))
+    if (keyboard[83]) { // S key
+        if (mesh.position.y > 0.5) {
+            myZ = mesh.position.z - 0.1
+            mesh.position.set(myX, myY, myZ)
+            var msg = {
+                type: 'scene',
+                x: myX,
+                y: myY,
+                z: myZ
+            }
+            socket.send(JSON.stringify(msg))
+        }
+    }
+    if (keyboard[65]) { // A key
+        // Redirect motion by 90 degrees
+        myX = mesh.position.x + 0.1
+        mesh.position.set(myX, myY, myZ)
+        var msg = {
+            type: 'scene',
+            x: myX,
+            y: myY,
+            z: myZ
+        }
+        socket.send(JSON.stringify(msg))
+    }
+    if (keyboard[68]) { // D key
+        myX = mesh.position.x - 0.1
+        mesh.position.set(myX, myY, myZ)
+        var msg = {
+            type: 'scene',
+            x: myX,
+            y: myY,
+            z: myZ
+        }
+        socket.send(JSON.stringify(msg))
+    }
+
+    // Keyboard turn inputs
+    if (keyboard[37]) { // left arrow key
+        camera.rotation.y -= player.turnSpeed;
+    }
+    if (keyboard[39]) { // right arrow key
+        camera.rotation.y += player.turnSpeed;
+    }
+
+    renderer.render(scene, camera);
+
+    
+    //console.log('enviat desde user')
 }
+
+function keyDown(event) {
+    keyboard[event.keyCode] = true;
+}
+
+function keyUp(event) {
+    keyboard[event.keyCode] = false;
+}
+
+window.addEventListener('keydown', keyDown);
+window.addEventListener('keyup', keyUp);
+
+//End of Scene functions
+
+
+//canvas.addEventListener("mousedown", function (e) {
+//    getMousePos(canvas, e)
+//}, false);
+
+//Draw the circle in the canvas
+//function drawCircle(x, y, color_fill) {
+//    ctx.fillStyle = color_fill;
+//    ctx.beginPath();
+//    if (color_fill !== "white") {
+//        ctx.arc(x, y, 40, 0, 2 * Math.PI);
+//        ctx.stroke();
+//    } else {
+//        ctx.arc(x, y, 42, 0, 2 * Math.PI);
+//    } 
+//    ctx.fill();
+
+//}
+
+//function getMousePos(canvas, evt) {
+//    //Send the position of the mouse in the canvas
+//    var rect = canvas.getBoundingClientRect(), // abs. size of element
+//        scaleX = canvas.width / rect.width,    // relationship bitmap vs. element for X
+//        scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for Y
+
+//    toX = (evt.clientX - rect.left) * scaleX;
+//    toY = (evt.clientY - rect.top) * scaleY;
+
+//    msg = {
+//        type: 'canvas',
+//        x: toX,
+//        y: toY,
+//        color: color
+//    }
+//    socket.send(JSON.stringify(msg))
+//}
 
 var enterButton = document.querySelector(".buttonEnter")
 enterButton.addEventListener('click', function () {
     enterChat()
 })
+
 var inputUserName = document.querySelector(".logUserName")
 inputUserName.addEventListener('keydown', function (e) {
     onKey(e, 'username')
 })
+
 var inputSendMessage = document.querySelector('.inputText')
 inputSendMessage.addEventListener('keydown', function (e) {
     onKey(e, 'sendmessage')
 })
+
 var username = document.querySelector('.roomName')
 var infoUsername = null;
 function onKey(e, type) {
@@ -67,6 +239,8 @@ function onKey(e, type) {
         }
     }
 }
+
+//Sending a message
 function sendMessage() {
     console.log('Message SEND')
     var msg = {
@@ -99,12 +273,17 @@ function sendMessage() {
 
     inputSendMessage.value = ''
 }
+
+//Recieving a message
 function recieveMessage(message, type) {
     if (type === 'canvas') {
         console.log('Draw canvas', message)
-        draw(message.x, message.y, message.color)
+        //drawCircle(message.x, message.y, message.color)
     }
-    else if (type === 'userconnected') {
+    else if (type === 'scene') {
+        console.log('Recieved scene, lets draw it')
+        moveCube(message.x, message.y, message.z)
+    }else if (type === 'userconnected') {
         console.log('USER CONNECTED: ', message)
         var bodyMessages = document.querySelector('.bodyMessages');
         var containerMessageUserConnected = document.createElement('div')
@@ -125,6 +304,7 @@ function recieveMessage(message, type) {
         containerMessageUserDisconnected.appendChild(messageUserDisconnected)
         bodyMessages.appendChild(containerMessageUserDisconnected)
         bodyMessages.scrollTop = bodyMessages.scrollHeight
+
     } else {
         console.log('MessageRecived: ', message)
         var bodyMessages = document.querySelector('.bodyMessages');
@@ -144,8 +324,9 @@ function recieveMessage(message, type) {
         bodyMessages.appendChild(containerMessageOther)
         bodyMessages.scrollTop = bodyMessages.scrollHeight
     }
-
 }
+
+//Socket Functions
 var socket = null
 var msg = {}
 function enterChat() {
@@ -157,14 +338,23 @@ function enterChat() {
             text: 'Hello server'
         }
         this.send(JSON.stringify(msg))
-        msg = {
-            type: 'canvas',
-            x: x,
-            y: y,
-            color: color
+        init()
+        //Hola, he entrat i estic al mitj
+        var msg = {
+            type: 'scene',
+            x: 0,
+            y: 1,
+            z: 0
         }
-        console.log('Message canvas sended!')
-        this.send(JSON.stringify(msg))
+        socket.send(JSON.stringify(msg))
+        //msg = {
+        //    type: 'canvas',
+        //    x: x,
+        //    y: y,
+        //    color: color
+        //}
+        //console.log('Message canvas sended!')
+        //this.send(JSON.stringify(msg))
 
         var login = document.querySelector('.login')
         login.style.display = 'none'
@@ -188,6 +378,13 @@ function enterChat() {
                 var info = message.info
                 numberRoomClients.innerHTML = info
                 break;
+            case "scene":
+                if (message.info.uid !== infoUsername.uid) {
+                    for (var i = 0; i < message.draws.length; i++) {
+                        recieveMessage(message.draws[i], message.draws[i].type)
+                    }
+                }
+                break;
             case "message":
                 if (message.info.uid !== infoUsername.uid) {
                     recieveMessage(message.info)
@@ -210,13 +407,12 @@ function enterChat() {
                 break;
             case "draws":
                 draws = message.draws
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                //ctx.clearRect(0, 0, canvas.width, canvas.height);
                 for(var i = 0; i< message.draws.length; i++){
                     recieveMessage(message.draws[i], message.draws[i].type)
                 }
                 break;
         }
-
 
     }
     socket.onerror = function (err) {
