@@ -69,13 +69,16 @@ wsServer.on('request', function (request) {
         }
     }
     sendAll(JSON.stringify(msg))
+
+    //Send the state of the scene
     msg = {
         type: 'draws',
         draws: draws
     }
     console.log('sending messages to the client from server')
     sendAll(JSON.stringify(msg))
-    
+
+    //Quan algum m'envia un msg del estil:
     connection.on('message', function (data) {
         if (data.type === 'utf8') {
             var message = JSON.parse(data.utf8Data)
@@ -107,12 +110,12 @@ wsServer.on('request', function (request) {
                         if (draws[i].info.uid === message.info.uid) {
                             draws[i] = message
                             v = 1;
-                            console.log('')
                         }
                     }
                     if (v === 0) {
                         draws.push(message)
                     }
+                    console.log('draws te tamany:', draws.length)
                     //Send the array with all the users and their positions
                     msg = {
                         type: 'scene',

@@ -1,6 +1,8 @@
 var colors = ["blue", "yellow", "pink", "green"]
 var draws = []
-
+var cubes = []
+var infoUsername = null;
+var uid;
 
 //Scene
 var scene, camera, renderer, mesh;
@@ -12,29 +14,31 @@ var myX, myY, myZ;
 scene = new THREE.Scene();
 camera = new THREE.PerspectiveCamera(100, 1280 / 720, 0.1, 500);
 
-// Fill canvas
-//var x = 95; y = 50;
-//var canvas = document.querySelector("#drawCanvas");
-//var ctx = canvas.getContext("2d");
-//var color = colors[Math.floor(Math.random() * colors.length)]
-////var color = "white"
-//drawCircle(x, y, color)
-
-//Scene functions
+//MY Cube
+mesh = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshPhongMaterial({ color: 0xff4444, wireframe: USE_WIREFRAME })
+);
+//Set position to 1 in order to not be inside the plane
+myX = mesh.position.x;
+myY = mesh.position.y += 1;
+myZ = mesh.position.z;
+// The cube can have shadows cast onto it, and it can cast shadows
+mesh.receiveShadow = true;
+mesh.castShadow = true;
+scene.add(mesh);
 
 function init() {
-    mesh = new THREE.Mesh(
-        new THREE.BoxGeometry(1, 1, 1),
+    identifier = new THREE.Mesh(
+        
+        new THREE.OctahedronBufferGeometry(0.1),
         new THREE.MeshPhongMaterial({ color: 0xff4444, wireframe: USE_WIREFRAME })
     );
     //Set position to 1 in order to not be inside the plane
-    myX = mesh.position.x;
-    myY = mesh.position.y += 1;
-    myZ = mesh.position.z;
-    // The cube can have shadows cast onto it, and it can cast shadows
-    mesh.receiveShadow = true;
-    mesh.castShadow = true;
-    scene.add(mesh);
+    identifier.position.x = myX;
+    identifier.position.y = 2;
+    identifier.position.z = myZ;
+    scene.add(identifier);
 
     meshFloor = new THREE.Mesh(
         new THREE.PlaneGeometry(50, 50, 50, 50),
@@ -73,20 +77,26 @@ function init() {
 
     animate();
 }
-function moveCube(x,y,z) {
-    mesh = new THREE.Mesh(
+function createMesh() {
+    var newMesh = new THREE.Mesh(
         new THREE.BoxGeometry(1, 1, 1),
-        new THREE.MeshPhongMaterial({ color: 0x444444, wireframe: USE_WIREFRAME })
+        new THREE.MeshPhongMaterial({ color: 0xff4444, wireframe: USE_WIREFRAME })
     );
     //Set position to 1 in order to not be inside the plane
-    mesh.position.x = x;
-    mesh.position.y = y;
-    mesh.position.z = z;
+    newMesh.position.x;
+    newMesh.position.y += 1;
+    newMesh.position.z;
     // The cube can have shadows cast onto it, and it can cast shadows
-    mesh.receiveShadow = true;
-    mesh.castShadow = true;
-    scene.add(mesh);
-    
+    newMesh.receiveShadow = true;
+    newMesh.castShadow = true;
+    scene.add(newMesh);
+
+    cubes.push(newMesh);
+}
+function moveCube(uid, x, y, z) {
+    cubes[0].mesh.position.x = x;
+    cubes[0].mesh.position.y = y;
+    cubes[0].mesh.position.z = z;
 }
 function animate() {
     //Function performed several times per second
@@ -95,11 +105,13 @@ function animate() {
     //Give the cube some movement
     //mesh.rotation.x += 0.01;
     //mesh.rotation.y += 0.02;
+    identifier.rotation.y += 0.05;
 
     // Keyboard movement inputs
     if (keyboard[87]) { // W key
         myZ = mesh.position.z + 0.1
         mesh.position.set(myX, myY, myZ)
+        identifier.position.set(myX, 2, myZ)
         var msg = {
             type: 'scene',
             x: myX,
@@ -112,6 +124,7 @@ function animate() {
         if (mesh.position.y > 0.5) {
             myZ = mesh.position.z - 0.1
             mesh.position.set(myX, myY, myZ)
+            identifier.position.set(myX, 2, myZ)
             var msg = {
                 type: 'scene',
                 x: myX,
@@ -125,6 +138,7 @@ function animate() {
         // Redirect motion by 90 degrees
         myX = mesh.position.x + 0.1
         mesh.position.set(myX, myY, myZ)
+        identifier.position.set(myX, 2, myZ)
         var msg = {
             type: 'scene',
             x: myX,
@@ -136,6 +150,7 @@ function animate() {
     if (keyboard[68]) { // D key
         myX = mesh.position.x - 0.1
         mesh.position.set(myX, myY, myZ)
+        identifier.position.set(myX, 2, myZ)
         var msg = {
             type: 'scene',
             x: myX,
@@ -155,10 +170,10 @@ function animate() {
 
     renderer.render(scene, camera);
 
-    
     //console.log('enviat desde user')
 }
 
+//Detect when a key is pressed
 function keyDown(event) {
     keyboard[event.keyCode] = true;
 }
@@ -166,7 +181,7 @@ function keyDown(event) {
 function keyUp(event) {
     keyboard[event.keyCode] = false;
 }
-
+//Wait all the time for any key to be pressed
 window.addEventListener('keydown', keyDown);
 window.addEventListener('keyup', keyUp);
 
@@ -225,7 +240,6 @@ inputSendMessage.addEventListener('keydown', function (e) {
 })
 
 var username = document.querySelector('.roomName')
-var infoUsername = null;
 function onKey(e, type) {
     if (e.which === 13) {
         if (type === 'username') {
@@ -282,7 +296,10 @@ function recieveMessage(message, type) {
     }
     else if (type === 'scene') {
         console.log('Recieved scene, lets draw it')
-        moveCube(message.x, message.y, message.z)
+        for (var i = 0; i < draws.length; i++) {
+            scene.add(draws[i].mesh)
+        }
+                
     }else if (type === 'userconnected') {
         console.log('USER CONNECTED: ', message)
         var bodyMessages = document.querySelector('.bodyMessages');
@@ -347,14 +364,6 @@ function enterChat() {
             z: 0
         }
         socket.send(JSON.stringify(msg))
-        //msg = {
-        //    type: 'canvas',
-        //    x: x,
-        //    y: y,
-        //    color: color
-        //}
-        //console.log('Message canvas sended!')
-        //this.send(JSON.stringify(msg))
 
         var login = document.querySelector('.login')
         login.style.display = 'none'
@@ -372,18 +381,26 @@ function enterChat() {
                 infoUsername = message.info
                 console.log('USERNAME:', infoUsername.name)
                 username.innerHTML = username.innerHTML + ' ' + infoUsername.name
+                //Somebody new entered, add his mesh
+                cubes.push({
+                    uid: infoUsername.uid,
+                    mesh: mesh
+                })
+                moveCube(2,10,1,10)
+                console.log('he rebut un mesh', cubes.length)
                 break;
             case "clients":
                 var numberRoomClients = document.querySelector('.numberRoomClients')
                 var info = message.info
                 numberRoomClients.innerHTML = info
                 break;
-            case "scene":
-                if (message.info.uid !== infoUsername.uid) {
-                    for (var i = 0; i < message.draws.length; i++) {
-                        recieveMessage(message.draws[i], message.draws[i].type)
-                    }
+            case "scene":                           
+                draws = message.draws
+                for (var i = 0; draws.length; i++) {
+                    draws[i].mesh = cubes[i].mesh;
                 }
+                
+                
                 break;
             case "message":
                 if (message.info.uid !== infoUsername.uid) {
