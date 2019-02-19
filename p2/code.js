@@ -14,31 +14,9 @@ var myX, myY, myZ;
 scene = new THREE.Scene();
 camera = new THREE.PerspectiveCamera(100, 1280 / 720, 0.1, 500);
 
-//MY Cube
-mesh = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshPhongMaterial({ color: 0xff4444, wireframe: USE_WIREFRAME })
-);
-//Set position to 1 in order to not be inside the plane
-myX = mesh.position.x;
-myY = mesh.position.y += 1;
-myZ = mesh.position.z;
-// The cube can have shadows cast onto it, and it can cast shadows
-mesh.receiveShadow = true;
-mesh.castShadow = true;
-scene.add(mesh);
+
 
 function init() {
-    identifier = new THREE.Mesh(
-        
-        new THREE.OctahedronBufferGeometry(0.1),
-        new THREE.MeshPhongMaterial({ color: 0xff4444, wireframe: USE_WIREFRAME })
-    );
-    //Set position to 1 in order to not be inside the plane
-    identifier.position.x = myX;
-    identifier.position.y = 2;
-    identifier.position.z = myZ;
-    scene.add(identifier);
 
     meshFloor = new THREE.Mesh(
         new THREE.PlaneGeometry(50, 50, 50, 50),
@@ -77,26 +55,63 @@ function init() {
 
     animate();
 }
-function createMesh() {
+function addMeToScene() {
+    //MY Cube
+    mesh = new THREE.Mesh(
+        new THREE.BoxGeometry(1, 1, 1),
+        new THREE.MeshPhongMaterial({ color: 0xff4444, wireframe: USE_WIREFRAME })
+    );
+    //Set position to 1 in order to not be inside the plane
+    myX = mesh.position.x;
+    myY = mesh.position.y += 1;
+    myZ = mesh.position.z;
+    // The cube can have shadows cast onto it, and it can cast shadows
+    mesh.receiveShadow = true;
+    mesh.castShadow = true;
+    scene.add(mesh);
+
+    identifier = new THREE.Mesh(
+
+        new THREE.OctahedronBufferGeometry(0.1),
+        new THREE.MeshPhongMaterial({ color: 0xff4444, wireframe: USE_WIREFRAME })
+    );
+    //Set position to 1 in order to not be inside the plane
+    identifier.position.x = myX;
+    identifier.position.y = 2;
+    identifier.position.z = myZ;
+    scene.add(identifier);
+}
+function createMesh(x, y, z) {
     var newMesh = new THREE.Mesh(
         new THREE.BoxGeometry(1, 1, 1),
         new THREE.MeshPhongMaterial({ color: 0xff4444, wireframe: USE_WIREFRAME })
     );
     //Set position to 1 in order to not be inside the plane
-    newMesh.position.x;
-    newMesh.position.y += 1;
-    newMesh.position.z;
+    newMesh.position.x = x;
+    newMesh.position.y = y;
+    newMesh.position.z = z;
     // The cube can have shadows cast onto it, and it can cast shadows
     newMesh.receiveShadow = true;
     newMesh.castShadow = true;
     scene.add(newMesh);
-
-    cubes.push(newMesh);
+    return newMesh;
 }
-function moveCube(uid, x, y, z) {
+
+/* function moveCube(uid, x, y, z) {
     cubes[0].mesh.position.x = x;
     cubes[0].mesh.position.y = y;
     cubes[0].mesh.position.z = z;
+} */
+
+function moveCubeTo(cube) {
+    for (var i = 0; i < cubes.length; i++) {
+        if (cube.uid === cubes[i].uid) {
+            cubes[i].position = cube.position
+            cubes[i].mesh.position.x = cube.position.x;
+            cubes[i].mesh.position.y = cube.position.y;
+            cubes[i].mesh.position.z = cube.position.z;
+        }
+    }
 }
 function animate() {
     //Function performed several times per second
@@ -105,7 +120,7 @@ function animate() {
     //Give the cube some movement
     //mesh.rotation.x += 0.01;
     //mesh.rotation.y += 0.02;
-    identifier.rotation.y += 0.05;
+    //identifier.rotation.y += 0.05;
 
     // Keyboard movement inputs
     if (keyboard[87]) { // W key
@@ -113,10 +128,13 @@ function animate() {
         mesh.position.set(myX, myY, myZ)
         identifier.position.set(myX, 2, myZ)
         var msg = {
-            type: 'scene',
-            x: myX,
-            y: myY,
-            z: myZ
+            type: 'actualizeCube',
+            cubeUid: infoUsername.uid,
+            position: {
+                x: myX,
+                y: myY,
+                z: myZ
+            }
         }
         socket.send(JSON.stringify(msg))
     }
@@ -126,10 +144,13 @@ function animate() {
             mesh.position.set(myX, myY, myZ)
             identifier.position.set(myX, 2, myZ)
             var msg = {
-                type: 'scene',
-                x: myX,
-                y: myY,
-                z: myZ
+                type: 'actualizeCube',
+                cubeUid: infoUsername.uid,
+                position: {
+                    x: myX,
+                    y: myY,
+                    z: myZ
+                }
             }
             socket.send(JSON.stringify(msg))
         }
@@ -140,10 +161,13 @@ function animate() {
         mesh.position.set(myX, myY, myZ)
         identifier.position.set(myX, 2, myZ)
         var msg = {
-            type: 'scene',
-            x: myX,
-            y: myY,
-            z: myZ
+            type: 'actualizeCube',
+            cubeUid: infoUsername.uid,
+            position: {
+                x: myX,
+                y: myY,
+                z: myZ
+            }
         }
         socket.send(JSON.stringify(msg))
     }
@@ -152,10 +176,13 @@ function animate() {
         mesh.position.set(myX, myY, myZ)
         identifier.position.set(myX, 2, myZ)
         var msg = {
-            type: 'scene',
-            x: myX,
-            y: myY,
-            z: myZ
+            type: 'actualizeCube',
+            cubeUid: infoUsername.uid,
+            position: {
+                x: myX,
+                y: myY,
+                z: myZ
+            }
         }
         socket.send(JSON.stringify(msg))
     }
@@ -299,8 +326,8 @@ function recieveMessage(message, type) {
         for (var i = 0; i < draws.length; i++) {
             scene.add(draws[i].mesh)
         }
-                
-    }else if (type === 'userconnected') {
+
+    } else if (type === 'userconnected') {
         console.log('USER CONNECTED: ', message)
         var bodyMessages = document.querySelector('.bodyMessages');
         var containerMessageUserConnected = document.createElement('div')
@@ -342,10 +369,37 @@ function recieveMessage(message, type) {
         bodyMessages.scrollTop = bodyMessages.scrollHeight
     }
 }
-
+function addCubeToScene(cube, i) {
+    var userMesh = createMesh(cube.position.x, cube.position.y, cube.position.z)
+    cubes[i].mesh = userMesh
+}
+function drawScene() {
+    for (var i = 0; i < cubes.length; i++) {
+        addCubeToScene(cubes[i], i)
+    }
+}
 //Socket Functions
 var socket = null
 var msg = {}
+
+function addMeToServer() {
+    msg = {
+        type: 'addNewCube',
+        cube: {
+            position: {
+                x: myX,
+                y: myY,
+                z: myZ
+            }
+        }
+    }
+    socket.send(JSON.stringify(msg))
+}
+function newCube(cube) {
+    var mymesh = createMesh(cube.position.x, cube.position.y, cube.position.z)
+    cube.mesh = mymesh
+    cubes.push(cube)
+}
 function enterChat() {
     socket = new WebSocket("ws://" + 'localhost:1337/?name=' + inputUserName.value)
     socket.onopen = function () {
@@ -357,14 +411,13 @@ function enterChat() {
         this.send(JSON.stringify(msg))
         init()
         //Hola, he entrat i estic al mitj
-        var msg = {
-            type: 'scene',
+        /* var msg = {
+            type: 'newScene',
             x: 0,
             y: 1,
             z: 0
         }
-        socket.send(JSON.stringify(msg))
-
+        socket.send(JSON.stringify(msg)) */
         var login = document.querySelector('.login')
         login.style.display = 'none'
         var enterRoom = document.querySelector('.room')
@@ -386,7 +439,7 @@ function enterChat() {
                     uid: infoUsername.uid,
                     mesh: mesh
                 })
-                moveCube(2,10,1,10)
+                //moveCube(2, 10, 1, 10)
                 console.log('he rebut un mesh', cubes.length)
                 break;
             case "clients":
@@ -394,13 +447,11 @@ function enterChat() {
                 var info = message.info
                 numberRoomClients.innerHTML = info
                 break;
-            case "scene":                           
-                draws = message.draws
-                for (var i = 0; draws.length; i++) {
-                    draws[i].mesh = cubes[i].mesh;
-                }
-                
-                
+            case "scene":
+                cubes = message.cubes
+                addMeToScene()
+                drawScene()
+                addMeToServer()
                 break;
             case "message":
                 if (message.info.uid !== infoUsername.uid) {
@@ -422,11 +473,14 @@ function enterChat() {
                     recieveMessage(message, message.type)
                 }
                 break;
-            case "draws":
-                draws = message.draws
-                //ctx.clearRect(0, 0, canvas.width, canvas.height);
-                for(var i = 0; i< message.draws.length; i++){
-                    recieveMessage(message.draws[i], message.draws[i].type)
+            case "actualizeCubes":
+                if (message.cube.uid !== infoUsername.uid) {
+                    newCube(message.cube)
+                }
+                break;
+            case "moveCubeTo":
+                if (message.cube.uid !== infoUsername.uid) {
+                    moveCubeTo(message.cube)
                 }
                 break;
         }

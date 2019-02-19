@@ -2,7 +2,7 @@
 var users = [];
 var uid = 0;
 var messages = [];
-var draws = [];
+var cubes = [];
 var msg = {}
 // Http Server
 var http = require('http');
@@ -72,11 +72,11 @@ wsServer.on('request', function (request) {
 
     //Send the state of the scene
     msg = {
-        type: 'draws',
-        draws: draws
+        type: 'scene',
+        cubes: cubes
     }
-    console.log('sending messages to the client from server')
-    sendAll(JSON.stringify(msg))
+    console.log('sending scene to the client from server')
+    connection.send(JSON.stringify(msg))
 
     //Quan algum m'envia un msg del estil:
     connection.on('message', function (data) {
@@ -98,6 +98,31 @@ wsServer.on('request', function (request) {
                     }
                     sendAll(JSON.stringify(msg));
                     break;
+                case "addNewCube":
+                    message.cube.uid = user.uid
+                    cubes.push(message.cube)
+                    msg = {
+                        type: 'actualizeCubes',
+                        cube: message.cube
+                    }
+                    sendAll(JSON.stringify(msg));
+                    break;
+                case "actualizeCube":
+                    //message.cube.uid = user.uid
+                    for( var i = 0; i < cubes.length; i++){
+                        if(cubes[i].uid === message.cubeUid){
+                            cubes[i].position = message.position
+                        }
+                    }
+                    msg = {
+                        type: 'moveCubeTo',
+                        cube: {
+                            uid: message.cubeUid,
+                            position: message.position
+                        }
+                    }
+                    sendAll(JSON.stringify(msg));
+                    break;
                 case "scene":
                     console.log('MHA ENTRAT UNA SCENE')
                     message.info = {
@@ -106,20 +131,20 @@ wsServer.on('request', function (request) {
                     }
                     //Veure si es nou o ja estava a la sala
                     var v = 0;
-                    for (var i = 0; i < draws.length; i++) {
-                        if (draws[i].info.uid === message.info.uid) {
-                            draws[i] = message
+                    for (var i = 0; i < cubes.length; i++) {
+                        if (cubes[i].info.uid === message.info.uid) {
+                            cubes[i] = message
                             v = 1;
                         }
                     }
                     if (v === 0) {
-                        draws.push(message)
+                        cubes.push(message)
                     }
-                    console.log('draws te tamany:', draws.length)
+                    console.log('cubes te tamany:', cubes.length)
                     //Send the array with all the users and their positions
                     msg = {
                         type: 'scene',
-                        draws: draws
+                        cubes: cubes
                     }
                     sendAll(JSON.stringify(msg));
                     break
@@ -130,19 +155,19 @@ wsServer.on('request', function (request) {
                     }
                     console.log('sending message to client: ', message)
                     var v = 0;
-                    for(var i = 0; i<draws.length; i++){
-                        if(draws[i].info.uid === message.info.uid){
-                            draws[i] = message
+                    for(var i = 0; i<cubes.length; i++){
+                        if(cubes[i].info.uid === message.info.uid){
+                            cubes[i] = message
                             v = 1;
                             console.log('IIIIIINNNNNNNs')
                         }
                     }
                     if(v === 0){
-                        draws.push(message)
+                        cubes.push(message)
                     }
                     msg = {
-                        type: 'draws',
-                        draws: draws
+                        type: 'cubes',
+                        cubes: cubes
                     }
                     sendAll(JSON.stringify(msg))
                     break;
