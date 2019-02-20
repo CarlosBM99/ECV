@@ -1,11 +1,9 @@
-var colors = ["blue", "yellow", "pink", "green"]
-var draws = []
 var cubes = []
 var infoUsername = null;
 var uid;
 
 //Scene
-var scene, camera, renderer, mesh;
+var scene, camera, renderer, mesh, floorTexture;
 var meshFloor;
 var keyboard = {};
 var player = { height: 1.8, speed: 0.2, turnSpeed: Math.PI * 0.02 };
@@ -14,14 +12,16 @@ var myX, myY, myZ;
 scene = new THREE.Scene();
 camera = new THREE.PerspectiveCamera(100, 1280 / 720, 0.1, 500);
 
-
-
 function init() {
+    var texture = new THREE.TextureLoader().load("textures/floor.jpg");    
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(10, 10);
 
     meshFloor = new THREE.Mesh(
         new THREE.PlaneGeometry(50, 50, 50, 50),
         // MeshBasicMaterial does not react to lighting, so we replace with MeshPhongMaterial
-        new THREE.MeshPhongMaterial({ color: 0xffffff, wireframe: USE_WIREFRAME })
+        new THREE.MeshPhongMaterial({ color: 0xffffff, wireframe: USE_WIREFRAME, map: texture })
     );
     //Set the floor as floor
     meshFloor.rotation.x -= Math.PI / 2;
@@ -55,13 +55,14 @@ function init() {
 
     animate();
 }
+
 function addMeToScene() {
-    //MY Cube
+    //My Cube
     mesh = new THREE.Mesh(
         new THREE.BoxGeometry(1, 1, 1),
         new THREE.MeshPhongMaterial({ color: 0xff4444, wireframe: USE_WIREFRAME })
     );
-    //Set position to 1 in order to not be inside the plane
+    //Set position y to 1 in order to not be inside the plane
     myX = mesh.position.x;
     myY = mesh.position.y += 1;
     myZ = mesh.position.z;
@@ -71,7 +72,6 @@ function addMeToScene() {
     scene.add(mesh);
 
     identifier = new THREE.Mesh(
-
         new THREE.OctahedronBufferGeometry(0.1),
         new THREE.MeshPhongMaterial({ color: 0xff4444, wireframe: USE_WIREFRAME })
     );
@@ -81,10 +81,11 @@ function addMeToScene() {
     identifier.position.z = myZ;
     scene.add(identifier);
 }
+
 function createMesh(x, y, z) {
     var newMesh = new THREE.Mesh(
         new THREE.BoxGeometry(1, 1, 1),
-        new THREE.MeshPhongMaterial({ color: 0xff4444, wireframe: USE_WIREFRAME })
+        new THREE.MeshPhongMaterial({ color: 0x444444, wireframe: USE_WIREFRAME })
     );
     //Set position to 1 in order to not be inside the plane
     newMesh.position.x = x;
@@ -97,30 +98,70 @@ function createMesh(x, y, z) {
     return newMesh;
 }
 
-/* function moveCube(uid, x, y, z) {
-    cubes[0].mesh.position.x = x;
-    cubes[0].mesh.position.y = y;
-    cubes[0].mesh.position.z = z;
-} */
+function createName(name, x, y, z) {
+    var loader = new THREE.FontLoader();
+    loader.load('fonts/helvetiker_regular.typeface.json', function (font) {
+
+        var geometry = new THREE.TextGeometry(name, {
+            font: font,
+            size: 0.5,
+            height: 0.01,
+        });
+        var text = new THREE.Mesh(geometry);
+        text.position.set(x+0.5, y + 1, z)
+        text.rotation.y -= Math.PI 
+        scene.add(text)
+        return text;
+    });
+    
+    
+}
 
 function moveCubeTo(cube) {
     for (var i = 0; i < cubes.length; i++) {
         if (cube.uid === cubes[i].uid) {
             cubes[i].position = cube.position
-            cubes[i].mesh.position.x = cube.position.x;
-            cubes[i].mesh.position.y = cube.position.y;
-            cubes[i].mesh.position.z = cube.position.z;
+            cubes[i].mesh.position.set(cube.position.x, cube.position.y, cube.position.z);
+            cubes[i].meshName.position = cube.meshName.position
+            cubes[i].meshName.position.set(cube.position.x, cube.position.y + 1, cube.position.z);
         }
     }
 }
+
+function addCubeToScene(cube, i) {
+    var userMesh = createMesh(cube.position.x, cube.position.y, cube.position.z)
+    var userNameMesh = createName(cube.name, cube.position.x, cube.position.y, cube.position.z)
+    cubes[i].mesh = userMesh
+    cubes[i].meshName = userNameMesh
+}
+
+function drawScene() {
+    for (var i = 0; i < cubes.length; i++) {
+        addCubeToScene(cubes[i], i)
+    }
+}
+
+function newCube(cube) {
+    var mymeshname = createName(cube.name, cube.position.x, cube.position.y, cube.position.z)
+    cube.meshName = mymeshname
+    var mymesh = createMesh(cube.position.x, cube.position.y, cube.position.z)
+    cube.mesh = mymesh    
+    console.log("Cube name: ",cube.name)
+    cubes.push(cube)
+}
+
+function removeCube(uid) {
+    for (var i = 0; i < cubes.length; i++) {
+        if (cubes[i].uid === uid) {
+            cubes[i].mesh.position.y = -10;
+        }
+    }
+    
+}
+
 function animate() {
     //Function performed several times per second
     requestAnimationFrame(animate);
-
-    //Give the cube some movement
-    //mesh.rotation.x += 0.01;
-    //mesh.rotation.y += 0.02;
-    //identifier.rotation.y += 0.05;
 
     // Keyboard movement inputs
     if (keyboard[87]) { // W key
@@ -130,6 +171,7 @@ function animate() {
         var msg = {
             type: 'actualizeCube',
             cubeUid: infoUsername.uid,
+            cubeName: infoUsername.name,
             position: {
                 x: myX,
                 y: myY,
@@ -146,6 +188,7 @@ function animate() {
             var msg = {
                 type: 'actualizeCube',
                 cubeUid: infoUsername.uid,
+                cubeName: infoUsername.name,
                 position: {
                     x: myX,
                     y: myY,
@@ -163,6 +206,7 @@ function animate() {
         var msg = {
             type: 'actualizeCube',
             cubeUid: infoUsername.uid,
+            cubeName: infoUsername.name,
             position: {
                 x: myX,
                 y: myY,
@@ -178,6 +222,7 @@ function animate() {
         var msg = {
             type: 'actualizeCube',
             cubeUid: infoUsername.uid,
+            cubeName: infoUsername.name,
             position: {
                 x: myX,
                 y: myY,
@@ -199,12 +244,10 @@ function animate() {
 
     //console.log('enviat desde user')
 }
-
 //Detect when a key is pressed
 function keyDown(event) {
     keyboard[event.keyCode] = true;
 }
-
 function keyUp(event) {
     keyboard[event.keyCode] = false;
 }
@@ -213,43 +256,6 @@ window.addEventListener('keydown', keyDown);
 window.addEventListener('keyup', keyUp);
 
 //End of Scene functions
-
-
-//canvas.addEventListener("mousedown", function (e) {
-//    getMousePos(canvas, e)
-//}, false);
-
-//Draw the circle in the canvas
-//function drawCircle(x, y, color_fill) {
-//    ctx.fillStyle = color_fill;
-//    ctx.beginPath();
-//    if (color_fill !== "white") {
-//        ctx.arc(x, y, 40, 0, 2 * Math.PI);
-//        ctx.stroke();
-//    } else {
-//        ctx.arc(x, y, 42, 0, 2 * Math.PI);
-//    } 
-//    ctx.fill();
-
-//}
-
-//function getMousePos(canvas, evt) {
-//    //Send the position of the mouse in the canvas
-//    var rect = canvas.getBoundingClientRect(), // abs. size of element
-//        scaleX = canvas.width / rect.width,    // relationship bitmap vs. element for X
-//        scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for Y
-
-//    toX = (evt.clientX - rect.left) * scaleX;
-//    toY = (evt.clientY - rect.top) * scaleY;
-
-//    msg = {
-//        type: 'canvas',
-//        x: toX,
-//        y: toY,
-//        color: color
-//    }
-//    socket.send(JSON.stringify(msg))
-//}
 
 var enterButton = document.querySelector(".buttonEnter")
 enterButton.addEventListener('click', function () {
@@ -308,26 +314,13 @@ function sendMessage() {
     messageMe.appendChild(messageTextMe)
     containerMessageMe.appendChild(messageMe)
     bodyMessages.appendChild(containerMessageMe)
-
-    //var elem = document.getElementById('messages');
     bodyMessages.scrollTop = bodyMessages.scrollHeight
-
     inputSendMessage.value = ''
 }
 
 //Recieving a message
 function recieveMessage(message, type) {
-    if (type === 'canvas') {
-        console.log('Draw canvas', message)
-        //drawCircle(message.x, message.y, message.color)
-    }
-    else if (type === 'scene') {
-        console.log('Recieved scene, lets draw it')
-        for (var i = 0; i < draws.length; i++) {
-            scene.add(draws[i].mesh)
-        }
-
-    } else if (type === 'userconnected') {
+    if (type === 'userconnected') {
         console.log('USER CONNECTED: ', message)
         var bodyMessages = document.querySelector('.bodyMessages');
         var containerMessageUserConnected = document.createElement('div')
@@ -348,7 +341,6 @@ function recieveMessage(message, type) {
         containerMessageUserDisconnected.appendChild(messageUserDisconnected)
         bodyMessages.appendChild(containerMessageUserDisconnected)
         bodyMessages.scrollTop = bodyMessages.scrollHeight
-
     } else {
         console.log('MessageRecived: ', message)
         var bodyMessages = document.querySelector('.bodyMessages');
@@ -369,19 +361,10 @@ function recieveMessage(message, type) {
         bodyMessages.scrollTop = bodyMessages.scrollHeight
     }
 }
-function addCubeToScene(cube, i) {
-    var userMesh = createMesh(cube.position.x, cube.position.y, cube.position.z)
-    cubes[i].mesh = userMesh
-}
-function drawScene() {
-    for (var i = 0; i < cubes.length; i++) {
-        addCubeToScene(cubes[i], i)
-    }
-}
+
 //Socket Functions
 var socket = null
 var msg = {}
-
 function addMeToServer() {
     msg = {
         type: 'addNewCube',
@@ -395,11 +378,6 @@ function addMeToServer() {
     }
     socket.send(JSON.stringify(msg))
 }
-function newCube(cube) {
-    var mymesh = createMesh(cube.position.x, cube.position.y, cube.position.z)
-    cube.mesh = mymesh
-    cubes.push(cube)
-}
 function enterChat() {
     socket = new WebSocket("ws://" + 'localhost:1337/?name=' + inputUserName.value)
     socket.onopen = function () {
@@ -410,14 +388,6 @@ function enterChat() {
         }
         this.send(JSON.stringify(msg))
         init()
-        //Hola, he entrat i estic al mitj
-        /* var msg = {
-            type: 'newScene',
-            x: 0,
-            y: 1,
-            z: 0
-        }
-        socket.send(JSON.stringify(msg)) */
         var login = document.querySelector('.login')
         login.style.display = 'none'
         var enterRoom = document.querySelector('.room')
@@ -427,7 +397,6 @@ function enterChat() {
         console.log("Socket has been closed: ", e)
     })
     socket.onmessage = function (msg) {
-        //console.log("Received: " + msg.data)
         var message = JSON.parse(msg.data)
         switch (message.type) {
             case "username":
@@ -439,8 +408,6 @@ function enterChat() {
                     uid: infoUsername.uid,
                     mesh: mesh
                 })
-                //moveCube(2, 10, 1, 10)
-                console.log('he rebut un mesh', cubes.length)
                 break;
             case "clients":
                 var numberRoomClients = document.querySelector('.numberRoomClients')
@@ -470,6 +437,7 @@ function enterChat() {
                 break;
             case "userdisconnected":
                 if (message.info.uid !== infoUsername.uid) {
+                    removeCube(message.info.uid)
                     recieveMessage(message, message.type)
                 }
                 break;
@@ -484,7 +452,6 @@ function enterChat() {
                 }
                 break;
         }
-
     }
     socket.onerror = function (err) {
         console.log("error: ", err)

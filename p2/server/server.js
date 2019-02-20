@@ -78,7 +78,7 @@ wsServer.on('request', function (request) {
     console.log('sending scene to the client from server')
     connection.send(JSON.stringify(msg))
 
-    //Quan algum m'envia un msg del estil:
+    //On message of type:
     connection.on('message', function (data) {
         if (data.type === 'utf8') {
             var message = JSON.parse(data.utf8Data)
@@ -100,6 +100,7 @@ wsServer.on('request', function (request) {
                     break;
                 case "addNewCube":
                     message.cube.uid = user.uid
+                    message.cube.name = user.name
                     cubes.push(message.cube)
                     msg = {
                         type: 'actualizeCubes',
@@ -118,58 +119,11 @@ wsServer.on('request', function (request) {
                         type: 'moveCubeTo',
                         cube: {
                             uid: message.cubeUid,
+                            name: message.cubeName,
                             position: message.position
                         }
                     }
                     sendAll(JSON.stringify(msg));
-                    break;
-                case "scene":
-                    console.log('MHA ENTRAT UNA SCENE')
-                    message.info = {
-                        name: user.name,
-                        uid: user.uid
-                    }
-                    //Veure si es nou o ja estava a la sala
-                    var v = 0;
-                    for (var i = 0; i < cubes.length; i++) {
-                        if (cubes[i].info.uid === message.info.uid) {
-                            cubes[i] = message
-                            v = 1;
-                        }
-                    }
-                    if (v === 0) {
-                        cubes.push(message)
-                    }
-                    console.log('cubes te tamany:', cubes.length)
-                    //Send the array with all the users and their positions
-                    msg = {
-                        type: 'scene',
-                        cubes: cubes
-                    }
-                    sendAll(JSON.stringify(msg));
-                    break
-                case "canvas":
-                    message.info = {
-                        name: user.name,
-                        uid: user.uid
-                    }
-                    console.log('sending message to client: ', message)
-                    var v = 0;
-                    for(var i = 0; i<cubes.length; i++){
-                        if(cubes[i].info.uid === message.info.uid){
-                            cubes[i] = message
-                            v = 1;
-                            console.log('IIIIIINNNNNNNs')
-                        }
-                    }
-                    if(v === 0){
-                        cubes.push(message)
-                    }
-                    msg = {
-                        type: 'cubes',
-                        cubes: cubes
-                    }
-                    sendAll(JSON.stringify(msg))
                     break;
             }
         }
@@ -183,6 +137,11 @@ wsServer.on('request', function (request) {
         msg = {
             type: 'clients',
             info: users.length
+        }
+        for (var i = 0; i < cubes.length; i++) {
+            if (cubes[i].uid === user.uid) {
+                cubes[i].position.y = -10
+            }
         }
         sendAll(JSON.stringify(msg))
         msg = {
