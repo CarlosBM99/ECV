@@ -5,12 +5,65 @@ var isTyping = false;
 //Scene
 var scene, camera, renderer, mesh, floorTexture;
 var meshFloor;
+var INTERSECTED;
 var keyboard = {};
 var player = { height: 1.8, speed: 0.2, turnSpeed: Math.PI * 0.02 };
 var USE_WIREFRAME = false;
 var myX, myY, myZ;
 scene = new THREE.Scene();
 camera = new THREE.PerspectiveCamera(100, 1280 / 720, 0.1, 500);
+
+var raycaster = new THREE.Raycaster();
+var mouse = new THREE.Vector2();
+var speed = 100;
+var elapsed = 0.01;
+var moving = false;
+var toX, toZ, aux;
+function onMouseMove(event) {
+
+    // calculate mouse position in normalized device coordinates
+    // (-1 to +1) for both components
+
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+    console.log('clicked')
+    moving = true;
+    aux = 0;
+    //console.log(scene)
+}
+
+function render() {
+
+    // update the picking ray with the camera and mouse position
+    raycaster.setFromCamera(mouse, camera);
+    // calculate objects intersecting the picking ray
+    var intersects = raycaster.intersectObjects(scene.children);
+    if (intersects.length > 0) {
+        if (aux === 0){
+            //console.log('Intersect:', intersects, 'x:', intersects[0].point.x, 'myX: ', myX, 'z:', intersects[0].point.z, 'myZ:', myZ)
+            console.log('Intersect:', intersects[0])
+            toX = intersects[0].point.y
+            toZ = intersects[0].point.z
+            console.log('x:', toX,'y:',intersects[0].point.y, 'z:',toZ)
+            aux = 1;
+        }
+        teleportMyCubeTo()
+        //intersects = null
+
+    } else {
+        if (INTERSECTED) {
+        }
+    }
+
+    renderer.render(scene, camera);
+
+}
+
+window.onmouseup = function (e) {
+    onMouseMove(e)
+}
+
+
 
 function init() {
     var texture = new THREE.TextureLoader().load("textures/floor.jpg");
@@ -52,7 +105,7 @@ function init() {
 
     var c = document.querySelector(".room")
     c.insertBefore(renderer.domElement, c.firstChild);
-
+    window.requestAnimationFrame(render);
     animate();
 }
 
@@ -66,6 +119,7 @@ function addMeToScene() {
     myX = mesh.position.x;
     myY = mesh.position.y += 1;
     myZ = mesh.position.z;
+    camera.position.set(myX, myY + 2, myZ - 5)
     // The cube can have shadows cast onto it, and it can cast shadows
     mesh.receiveShadow = true;
     mesh.castShadow = true;
@@ -124,9 +178,54 @@ async function createName(name, x, y, z, uid) {
         }
         return await text;
     })
-    return a
+    return a;
 }
-
+function teleportMyCubeTo() {
+    if (moving === true) {
+        if (Math.floor(myX) < Math.floor(toX)) {
+            myX = mesh.position.x + 0.1
+        } else if (Math.floor(myX) > Math.floor(toX)) {
+            myX = mesh.position.x - 0.1
+        } else {
+            if (Math.floor(myZ) < Math.floor(toZ)) {
+                myZ = mesh.position.z + 0.1
+            } else if (Math.floor(myZ) > Math.floor(toZ)) {
+                myZ = mesh.position.z - 0.1
+            } else {
+                moving = false
+            }
+            mesh.position.set(myX, myY, myZ)
+            identifier.position.set(myX, 2, myZ)
+        }
+        var msg = {
+            type: 'actualizeCube',
+            cubeUid: infoUsername.uid,
+            cubeName: infoUsername.name,
+            position: {
+                x: myX,
+                y: myY,
+                z: myZ
+            }
+        }
+        socket.send(JSON.stringify(msg))
+        camera.position.set(myX, myY + 2, myZ - 5)
+        
+        /* mesh.position.set(myX, myY, myZ)
+        identifier.position.set(myX, 2, myZ)
+        var msg = {
+            type: 'actualizeCube',
+            cubeUid: infoUsername.uid,
+            cubeName: infoUsername.name,
+            position: {
+                x: myX,
+                y: myY,
+                z: myZ
+            }
+        }
+        socket.send(JSON.stringify(msg))
+        camera.position.set(myX, myY + 2, myZ - 5) */
+    }
+}
 function moveCubeTo(cube) {
     for (var i = 0; i < cubes.length; i++) {
         if (cube.uid === cubes[i].uid) {
@@ -169,9 +268,10 @@ function removeCube(uid) {
 }
 
 function animate() {
+    render();
+
     //Function performed several times per second
     requestAnimationFrame(animate);
-
     // Keyboard movement inputs
     if (keyboard[87] && !isTyping) { // W key
         myZ = mesh.position.z + 0.1
@@ -188,6 +288,7 @@ function animate() {
             }
         }
         socket.send(JSON.stringify(msg))
+        camera.position.set(myX, myY + 2, myZ - 5)
     }
     if (keyboard[83] && !isTyping) { // S key
         if (mesh.position.y > 0.5) {
@@ -205,6 +306,8 @@ function animate() {
                 }
             }
             socket.send(JSON.stringify(msg))
+            camera.position.set(myX, myY + 2, myZ - 5)
+
         }
     }
     if (keyboard[65] && !isTyping) { // A key
@@ -223,6 +326,8 @@ function animate() {
             }
         }
         socket.send(JSON.stringify(msg))
+        camera.position.set(myX, myY + 2, myZ - 5)
+
     }
     if (keyboard[68] && !isTyping) { // D key
         myX = mesh.position.x - 0.1
@@ -239,6 +344,8 @@ function animate() {
             }
         }
         socket.send(JSON.stringify(msg))
+        camera.position.set(myX, myY + 2, myZ - 5)
+
     }
 
     /* // Keyboard turn inputs
@@ -280,10 +387,10 @@ var inputSendMessage = document.querySelector('.inputText')
 inputSendMessage.addEventListener('keydown', function (e) {
     onKey(e, 'sendmessage')
 })
-inputSendMessage.onblur = function() {
+inputSendMessage.onblur = function () {
     isTyping = false;
 }
-inputSendMessage.onfocus = function() {
+inputSendMessage.onfocus = function () {
     isTyping = true;
 }
 var username = document.querySelector('.roomName')
