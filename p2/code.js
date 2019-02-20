@@ -1,7 +1,7 @@
 var cubes = []
 var infoUsername = null;
 var uid;
-
+var isTyping = false;
 //Scene
 var scene, camera, renderer, mesh, floorTexture;
 var meshFloor;
@@ -13,7 +13,7 @@ scene = new THREE.Scene();
 camera = new THREE.PerspectiveCamera(100, 1280 / 720, 0.1, 500);
 
 function init() {
-    var texture = new THREE.TextureLoader().load("textures/floor.jpg");    
+    var texture = new THREE.TextureLoader().load("textures/floor.jpg");
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set(10, 10);
@@ -98,23 +98,33 @@ function createMesh(x, y, z) {
     return newMesh;
 }
 
-function createName(name, x, y, z) {
+async function createName(name, x, y, z, uid) {
     var loader = new THREE.FontLoader();
-    loader.load('fonts/helvetiker_regular.typeface.json', function (font) {
-
+    var text = undefined
+    var a = await loader.load('fonts/helvetiker_regular.typeface.json', async function (font) {
         var geometry = new THREE.TextGeometry(name, {
             font: font,
             size: 0.5,
             height: 0.01,
         });
-        var text = new THREE.Mesh(geometry);
-        text.position.set(x+0.5, y + 1, z)
-        text.rotation.y -= Math.PI 
+        text = new THREE.Mesh(geometry);
+        text.position.set(x + 0.5, y + 1, z)
+        text.rotation.y -= Math.PI
         scene.add(text)
-        return text;
-    });
-    
-    
+        for (var i = 0; i < cubes.length; i++) {
+            if (cubes[i].uid === uid) {
+                cubes[i].meshName = {}
+                cubes[i].meshName.mesh = text
+                cubes[i].meshName.position = {
+                    x: cubes[i].position.x,
+                    y: cubes[i].position.y,
+                    z: cubes[i].position.z
+                }
+            }
+        }
+        return await text;
+    })
+    return a
 }
 
 function moveCubeTo(cube) {
@@ -122,17 +132,16 @@ function moveCubeTo(cube) {
         if (cube.uid === cubes[i].uid) {
             cubes[i].position = cube.position
             cubes[i].mesh.position.set(cube.position.x, cube.position.y, cube.position.z);
-            cubes[i].meshName.position = cube.meshName.position
-            cubes[i].meshName.position.set(cube.position.x, cube.position.y + 1, cube.position.z);
+            cubes[i].meshName.mesh.position.set(cube.position.x + 0.5, cube.position.y + 1, cube.position.z);
+            cubes[i].meshName.position = cube.position
         }
     }
 }
 
 function addCubeToScene(cube, i) {
     var userMesh = createMesh(cube.position.x, cube.position.y, cube.position.z)
-    var userNameMesh = createName(cube.name, cube.position.x, cube.position.y, cube.position.z)
+    var userNameMesh = createName(cube.name, cube.position.x, cube.position.y, cube.position.z, cube.uid)
     cubes[i].mesh = userMesh
-    cubes[i].meshName = userNameMesh
 }
 
 function drawScene() {
@@ -142,11 +151,10 @@ function drawScene() {
 }
 
 function newCube(cube) {
-    var mymeshname = createName(cube.name, cube.position.x, cube.position.y, cube.position.z)
-    cube.meshName = mymeshname
+    var mymeshname = createName(cube.name, cube.position.x, cube.position.y, cube.position.z, cube.uid)
     var mymesh = createMesh(cube.position.x, cube.position.y, cube.position.z)
-    cube.mesh = mymesh    
-    console.log("Cube name: ",cube.name)
+    cube.mesh = mymesh
+    console.log("Cube name: ", cube.name)
     cubes.push(cube)
 }
 
@@ -154,9 +162,10 @@ function removeCube(uid) {
     for (var i = 0; i < cubes.length; i++) {
         if (cubes[i].uid === uid) {
             cubes[i].mesh.position.y = -10;
+            cubes[i].meshName.mesh.position.y = -10;
         }
     }
-    
+
 }
 
 function animate() {
@@ -164,7 +173,7 @@ function animate() {
     requestAnimationFrame(animate);
 
     // Keyboard movement inputs
-    if (keyboard[87]) { // W key
+    if (keyboard[87] && !isTyping) { // W key
         myZ = mesh.position.z + 0.1
         mesh.position.set(myX, myY, myZ)
         identifier.position.set(myX, 2, myZ)
@@ -180,7 +189,7 @@ function animate() {
         }
         socket.send(JSON.stringify(msg))
     }
-    if (keyboard[83]) { // S key
+    if (keyboard[83] && !isTyping) { // S key
         if (mesh.position.y > 0.5) {
             myZ = mesh.position.z - 0.1
             mesh.position.set(myX, myY, myZ)
@@ -198,7 +207,7 @@ function animate() {
             socket.send(JSON.stringify(msg))
         }
     }
-    if (keyboard[65]) { // A key
+    if (keyboard[65] && !isTyping) { // A key
         // Redirect motion by 90 degrees
         myX = mesh.position.x + 0.1
         mesh.position.set(myX, myY, myZ)
@@ -215,7 +224,7 @@ function animate() {
         }
         socket.send(JSON.stringify(msg))
     }
-    if (keyboard[68]) { // D key
+    if (keyboard[68] && !isTyping) { // D key
         myX = mesh.position.x - 0.1
         mesh.position.set(myX, myY, myZ)
         identifier.position.set(myX, 2, myZ)
@@ -232,13 +241,13 @@ function animate() {
         socket.send(JSON.stringify(msg))
     }
 
-    // Keyboard turn inputs
+    /* // Keyboard turn inputs
     if (keyboard[37]) { // left arrow key
         camera.rotation.y -= player.turnSpeed;
     }
     if (keyboard[39]) { // right arrow key
         camera.rotation.y += player.turnSpeed;
-    }
+    } */
 
     renderer.render(scene, camera);
 
@@ -271,7 +280,12 @@ var inputSendMessage = document.querySelector('.inputText')
 inputSendMessage.addEventListener('keydown', function (e) {
     onKey(e, 'sendmessage')
 })
-
+inputSendMessage.onblur = function() {
+    isTyping = false;
+}
+inputSendMessage.onfocus = function() {
+    isTyping = true;
+}
 var username = document.querySelector('.roomName')
 function onKey(e, type) {
     if (e.which === 13) {
