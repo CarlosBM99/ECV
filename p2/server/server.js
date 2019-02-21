@@ -15,19 +15,11 @@ var server = http.createServer(function (request, response) {
     var params = url_info.query; //the parameters
     response.end("OK!"); //send a response
 });
+//Localhost
 var port = 1337
 server.listen(port, function () {
     console.log(`Server ready on port ${port}!`);
 });
-
-// Express
-const express = require("express");
-const app = express()
-app.get('/', (req, res) => {
-    res.send('Hello World')
-    console.log('nice')
-})
-app.listen(port + 1, () => console.log(`Example app listening on port ${port + 1}!`))
 // WebSocket Server
 var WebSocketServer = require('websocket').server;
 var wsServer = new WebSocketServer({ // create the server
@@ -128,7 +120,7 @@ wsServer.on('request', function (request) {
             }
         }
     });
-
+    //What to do when someone leaves
     connection.on('close', function (connection) {
         console.log("USER " + user.name +" IS GONE");// close user connection
         users = users.filter(function( obj ) {
@@ -154,7 +146,7 @@ wsServer.on('request', function (request) {
         sendAll(JSON.stringify(msg))
     });
 });
-
+//Function to actualize every user with the latest information
 function sendAll(msg){
     for(var i = 0; i < users.length; i++){
         users[i].connection.send(msg)

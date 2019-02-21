@@ -29,7 +29,6 @@ function onMouseMove(event) {
     console.log('clicked')
     moving = true;
     aux = 0;
-    //console.log(scene)
 }
 
 function render() {
@@ -40,15 +39,11 @@ function render() {
     var intersects = raycaster.intersectObjects(scene.children);
     if (intersects.length > 0) {
         if (aux === 0){
-            //console.log('Intersect:', intersects, 'x:', intersects[0].point.x, 'myX: ', myX, 'z:', intersects[0].point.z, 'myZ:', myZ)
-            console.log('Intersect:', intersects[0])
-            toX = intersects[0].point.y
             toZ = intersects[0].point.z
             console.log('x:', toX,'y:',intersects[0].point.y, 'z:',toZ)
             aux = 1;
         }
         teleportMyCubeTo()
-        //intersects = null
 
     } else {
         if (INTERSECTED) {
@@ -182,21 +177,16 @@ async function createName(name, x, y, z, uid) {
 }
 function teleportMyCubeTo() {
     if (moving === true) {
-        if (Math.floor(myX) < Math.floor(toX)) {
-            myX = mesh.position.x + 0.1
-        } else if (Math.floor(myX) > Math.floor(toX)) {
-            myX = mesh.position.x - 0.1
+        if (Math.floor(myZ) < Math.floor(toZ)) {
+            myZ = mesh.position.z + 0.1
+        } else if (Math.floor(myZ) > Math.floor(toZ)) {
+            myZ = mesh.position.z - 0.1
         } else {
-            if (Math.floor(myZ) < Math.floor(toZ)) {
-                myZ = mesh.position.z + 0.1
-            } else if (Math.floor(myZ) > Math.floor(toZ)) {
-                myZ = mesh.position.z - 0.1
-            } else {
-                moving = false
-            }
-            mesh.position.set(myX, myY, myZ)
-            identifier.position.set(myX, 2, myZ)
+            moving = false
         }
+        mesh.position.set(myX, myY, myZ)
+        identifier.position.set(myX, 2, myZ)
+        
         var msg = {
             type: 'actualizeCube',
             cubeUid: infoUsername.uid,
@@ -209,21 +199,6 @@ function teleportMyCubeTo() {
         }
         socket.send(JSON.stringify(msg))
         camera.position.set(myX, myY + 2, myZ - 5)
-        
-        /* mesh.position.set(myX, myY, myZ)
-        identifier.position.set(myX, 2, myZ)
-        var msg = {
-            type: 'actualizeCube',
-            cubeUid: infoUsername.uid,
-            cubeName: infoUsername.name,
-            position: {
-                x: myX,
-                y: myY,
-                z: myZ
-            }
-        }
-        socket.send(JSON.stringify(msg))
-        camera.position.set(myX, myY + 2, myZ - 5) */
     }
 }
 function moveCubeTo(cube) {
@@ -272,8 +247,9 @@ function animate() {
 
     //Function performed several times per second
     requestAnimationFrame(animate);
-    // Keyboard movement inputs
-    if (keyboard[87] && !isTyping) { // W key
+    // Keyboard movement inputs 
+    //we check if someone is writing and if in the boundary of the map
+    if (keyboard[87] && !isTyping && myZ < 24.5) { // W key
         myZ = mesh.position.z + 0.1
         mesh.position.set(myX, myY, myZ)
         identifier.position.set(myX, 2, myZ)
@@ -290,7 +266,7 @@ function animate() {
         socket.send(JSON.stringify(msg))
         camera.position.set(myX, myY + 2, myZ - 5)
     }
-    if (keyboard[83] && !isTyping) { // S key
+    if (keyboard[83] && !isTyping && myZ > -24.5) { // S key
         if (mesh.position.y > 0.5) {
             myZ = mesh.position.z - 0.1
             mesh.position.set(myX, myY, myZ)
@@ -310,8 +286,7 @@ function animate() {
 
         }
     }
-    if (keyboard[65] && !isTyping) { // A key
-        // Redirect motion by 90 degrees
+    if (keyboard[65] && !isTyping && myX < 24.5) { // A key
         myX = mesh.position.x + 0.1
         mesh.position.set(myX, myY, myZ)
         identifier.position.set(myX, 2, myZ)
@@ -329,7 +304,7 @@ function animate() {
         camera.position.set(myX, myY + 2, myZ - 5)
 
     }
-    if (keyboard[68] && !isTyping) { // D key
+    if (keyboard[68] && !isTyping && myX > -24.5) { // D key
         myX = mesh.position.x - 0.1
         mesh.position.set(myX, myY, myZ)
         identifier.position.set(myX, 2, myZ)
@@ -347,19 +322,9 @@ function animate() {
         camera.position.set(myX, myY + 2, myZ - 5)
 
     }
-
-    /* // Keyboard turn inputs
-    if (keyboard[37]) { // left arrow key
-        camera.rotation.y -= player.turnSpeed;
-    }
-    if (keyboard[39]) { // right arrow key
-        camera.rotation.y += player.turnSpeed;
-    } */
-
     renderer.render(scene, camera);
-
-    //console.log('enviat desde user')
 }
+
 //Detect when a key is pressed
 function keyDown(event) {
     keyboard[event.keyCode] = true;
